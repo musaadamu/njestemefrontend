@@ -33,10 +33,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0 0 1.5rem;
+  padding: 0 1rem;
   height: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  gap: 1rem;
 }
 
 /* Logo Section */
@@ -44,6 +45,7 @@
   display: flex;
   align-items: center;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .logo-link {
@@ -87,110 +89,75 @@
 /* Navigation Menu */
 .nav-menu {
   display: flex;
-  gap: 1rem;
-  justify-content: flex-start;
-  background-color: var(--primary-700);
-  border-radius: 12px;
-  padding: 0.5rem 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  width: 100%;
-  flex-wrap: nowrap;
-  overflow-x: visible;
-  scrollbar-width: none;
-}
-.nav-menu::-webkit-scrollbar {
-  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  gap: 0.5rem;
+  padding: 0 1rem;
 }
 
-.nav-link:first-child {
+/* Main Navigation Links */
+.main-nav-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.user-nav-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
   margin-left: 1rem;
-}
-
-.nav-link:last-child {
-  margin-right: 1rem;
-}
-
-.nav-menu::-webkit-scrollbar {
-  height: 6px;
-}
-
-.nav-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.nav-menu::-webkit-scrollbar-thumb {
-  background-color: rgba(5, 150, 105, 0.6);
-  border-radius: 3px;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .nav-link,
 .user-link {
   color: var(--neutral-50);
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  margin: 0 0.5rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1.25rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
   background: linear-gradient(135deg, #059669, #34d399);
-  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.6);
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
 .nav-link:hover,
 .user-link:hover {
   background: linear-gradient(135deg, #34d399, #059669);
   color: var(--neutral-50);
-  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.8);
-}
-
-/* Main Navigation Links */
-.main-nav-links,
-.user-nav-links {
-  display: flex;
-  gap: 2.5rem;
-  align-items: center;
-  flex-direction: row;
-}
-
-.nav-link,
-.user-link {
-  color: var(--neutral-50);
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.nav-link:hover,
-.user-link:hover {
-  background-color: var(--primary-500);
-  color: var(--neutral-50);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.6);
+  transform: translateY(-1px);
 }
 
 .nav-text-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .nav-text-top {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .nav-text-bottom {
-  font-size: 0.8rem;
-  opacity: 0.8;
+  font-size: 0.75rem;
+  opacity: 0.9;
 }
 
 /* Mobile Navigation */
 .nav-mobile-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
 }
 
@@ -269,6 +236,48 @@
 }
 
 /* Responsive styles */
+@media (max-width: 1200px) {
+  .nav-link,
+  .user-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .nav-text-top {
+    font-size: 0.8rem;
+  }
+  
+  .nav-text-bottom {
+    font-size: 0.7rem;
+  }
+  
+  .main-nav-links {
+    gap: 0.5rem;
+  }
+  
+  .user-nav-links {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-link,
+  .user-link {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .main-nav-links {
+    gap: 0.25rem;
+  }
+  
+  .user-nav-links {
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-container {
     padding: 0 1rem;
@@ -297,6 +306,6 @@
 
 @media (min-width: 769px) {
   .nav-container {
-    padding: 0 2rem;
+    padding: 0 1.5rem;
   }
 }
