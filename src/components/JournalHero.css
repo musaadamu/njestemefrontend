@@ -1,0 +1,353 @@
+/* JournalHero.css - Enhanced professional styling with modern design */
+
+.journal-hero {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #f8fafc;
+    overflow: hidden;
+    margin: 0 auto 3rem;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 10px 20px -15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+@media (min-width: 768px) {
+    .journal-hero {
+        height: 650px;
+    }
+}
+
+/* Background Image with enhanced styling */
+.journal-hero__background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out, transform 12s ease;
+    filter: saturate(1.2) contrast(1.1);
+    transform-origin: center;
+    z-index: 1;
+}
+
+.journal-hero__background[style*="opacity: 1"] {
+    z-index: 2;
+    animation: kenBurns 12s ease-in-out forwards;
+}
+
+@keyframes kenBurns {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.08);
+    }
+}
+
+/* Overlay with modern gradient */
+.journal-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(30, 58, 138, 0.05) 0%,
+        rgba(37, 99, 235, 0.1) 50%,
+        rgba(59, 130, 246, 0.15) 100%
+    );
+    backdrop-filter: blur(2px);
+}
+
+/* Content Container with enhanced styling */
+.journal-hero__content {
+    position: relative;
+    z-index: 10;
+    color: #1e293b;
+    padding: 2rem;
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    transform: translateY(0);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.journal-hero:hover .journal-hero__content {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 768px) {
+    .journal-hero__content {
+        padding: 3rem 4rem;
+        max-width: 80%;
+    }
+}
+
+/* Title Styling with modern design */
+.journal-hero__title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: #1e3a8a;
+    letter-spacing: -0.025em;
+    position: relative;
+    padding-bottom: 1.5rem;
+    width: 100%;
+}
+
+.journal-hero__title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #1e3a8a, #3b82f6);
+    border-radius: 2px;
+}
+
+@media (min-width: 768px) {
+    .journal-hero__title {
+        font-size: 3.75rem;
+    }
+}
+
+/* Description Styling with improved readability */
+.journal-hero__description {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: #475569;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+@media (min-width: 768px) {
+    .journal-hero__description {
+        font-size: 1.5rem;
+        max-width: 80%;
+    }
+}
+
+/* Button Container with improved layout */
+.journal-hero__buttons {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    width: 100%;
+    position: relative;
+}
+
+.journal-hero__buttons::before {
+    content: '';
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: rgba(30, 58, 138, 0.2);
+    border-radius: 1px;
+}
+
+@media (min-width: 768px) {
+    .journal-hero__buttons {
+        flex-direction: row;
+        gap: 2rem;
+        margin-top: 3.5rem;
+    }
+}
+
+/* Primary Button with modern styling */
+.journal-hero__button-primary {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    background-size: 200% 100%;
+    color: white;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.35),
+                0 0 0 2px rgba(59, 130, 246, 0.1);
+    letter-spacing: 0.025em;
+    min-width: 200px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.journal-hero__button-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    transition: all 0.6s ease;
+    z-index: -1;
+}
+
+.journal-hero__button-primary:hover {
+    background-position: 100% 0;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+    text-decoration: none;
+    color: white;
+}
+
+.journal-hero__button-primary:hover::before {
+    left: 100%;
+}
+
+.journal-hero__button-primary:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px -3px rgba(37, 99, 235, 0.4);
+}
+
+/* Secondary Button with elegant styling */
+.journal-hero__button-secondary {
+    background: rgba(255, 255, 255, 0.8);
+    color: #1e3a8a;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(30, 58, 138, 0.1);
+    letter-spacing: 0.025em;
+    min-width: 200px;
+    text-align: center;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.journal-hero__button-secondary::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, #1e3a8a, #3b82f6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.journal-hero__button-secondary:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: #1e40af;
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.journal-hero__button-secondary:hover::after {
+    transform: scaleX(1);
+}
+
+.journal-hero__button-secondary:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Animation Keyframes */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(30, 58, 138, 0.4);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(30, 58, 138, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(30, 58, 138, 0);
+    }
+}
+
+.fade-up {
+    animation: fadeUp 0.8s ease forwards;
+}
+
+/* Enhanced badge with modern design */
+.journal-hero__badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    display: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: pulse 2s infinite;
+    z-index: 20;
+}
+
+.journal-hero__badge::before {
+    content: '★';
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .journal-hero__badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

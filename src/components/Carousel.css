@@ -1,0 +1,81 @@
+.carousel-caption {
+    position: absolute;
+    top: 20px; /* Move caption to top */
+    left: 15%; /* Center the text */
+    right: 15%; /* Center the text */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: #fff; /* White text color */
+    padding: 10px 20px; /* Add padding around the text */
+    border-radius: 5px; /* Rounded corners for better aesthetics */
+    max-width: 80%; /* Limit the caption width for readability */
+    margin: 0 auto; /* Center align the caption */
+    text-align: center; /* Center the text */
+}
+
+.carousel-caption h5 {
+    font-size: 2rem; /* Default size for heading text */
+    font-weight: bold; /* Bold font for the heading */
+}
+
+.carousel-caption p {
+    font-size: 1.25rem; /* Default paragraph text size */
+    margin-top: 5px; /* Add spacing between heading and paragraph */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .carousel-caption h5 {
+        font-size: 1.5rem; /* Smaller size for medium devices */
+    }
+    .carousel-caption p {
+        font-size: 1rem; /* Smaller size for medium devices */
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-caption {
+        display: none; /* Hides the captions on small devices */
+    }
+    .carousel-caption h5 {
+        font-size: 1.2rem; /* Smaller size for small devices */
+    }
+    .carousel-caption p {
+        font-size: 0.9rem; /* Smaller size for small devices */
+    }
+}
+
+.carousel-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel-caption-new {
+    padding: 15px 25px;
+    background-color: #ffffff;
+    color: #1f2937;
+    border-radius: 10px;
+    max-width: 85%;
+    margin: 15px auto 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: box-shadow 0.3s ease;
+}
+.carousel-caption-new:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.carousel-caption-new h5 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #059669; /* Using primary green color */
+}
+.carousel-caption-new p {
+    font-size: 1.125rem;
+    margin: 0;
+    color: #374151; /* Dark gray for readability */
+}

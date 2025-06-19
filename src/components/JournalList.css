@@ -1,0 +1,909 @@
+/* Modern Journal List Container */
+.modern-journal-list-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0.5rem auto; /* Reduced margin */
+    padding: 1rem; /* Reduced padding */
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-lg);
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--neutral-50);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center container contents */
+}
+
+/* Journal List Header */
+.journal-list-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-top: 0.5rem;
+}
+
+.journal-list-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(to right, #63b3ed, #4299e1);
+    border-radius: 3px;
+}
+
+.journal-list-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--neutral-50);
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.journal-list-header p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 1000px;
+    margin: 0 auto;
+    line-height: 1.6;
+    color: var(--neutral-200);
+}
+
+/* Search and Filter Section */
+.search-filter-section {
+    margin-bottom: 1rem; /* Reduced margin */
+    background: #ffffff;
+    padding: 1.25rem; /* Optimized padding */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(66, 153, 225, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.search-container {
+    display: flex;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.search-button {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 0 8px 8px 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: auto;
+}
+
+.search-button:hover {
+    background-color: #2c5282;
+}
+
+.filter-toggle {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f7fafc;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: auto;
+}
+
+.filter-button:hover {
+    background-color: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+.filter-panel {
+    background: linear-gradient(135deg, #f8fafc, #f0f7ff);
+    border: 1px solid rgba(66, 153, 225, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.filter-panel h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.filter-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(66, 153, 225, 0.1);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background-color: white;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.apply-filters {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: auto;
+}
+
+.apply-filters:hover {
+    background-color: #2c5282;
+}
+
+.reset-filters {
+    background-color: #f7fafc;
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    padding: 0.625rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: auto;
+}
+
+.reset-filters:hover {
+    background-color: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+.text-2xl {
+    font-size: 1.5rem; /* Larger font size for titles */
+    font-weight: bold; /* Bold font weight for emphasis */
+    color: #2563eb; /* Blue text color */
+    text-decoration: none; /* Remove underline from links */
+}
+
+.text-2xl a {
+    color: #2563eb; /* Blue text for links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.text-2xl a:hover {
+    color: #1e40af; /* Darker blue on hover */
+    text-decoration: underline; /* Underline on hover */
+}
+
+.bg-blue-500 {
+    background-color: #3b82f6 !important; /* Blue background */
+    color: #ffffff !important; /* White text color */
+    padding: 0.625rem 1.5rem; /* Padding */
+    border-radius: 0.375rem; /* Rounded corners */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.bg-blue-500:hover {
+    background-color: #2563eb !important; /* Darker blue on hover */
+}
+
+.text-red-500 {
+    color: #f56565; /* Red color for delete actions */
+}
+
+/* Error Alert */
+.bg-red-100 {
+    background-color: #fed7d7; /* Light red background for errors */
+    margin-bottom: 1rem; /* Space below the alert */
+}
+
+.border {
+    border: 1px solid #e2e8f0; /* Light border for sections */
+}
+
+/* Abstract Styling */
+.text-gray-600, .text-gray-700 {
+    color: #4a5568; /* Darker gray text for better readability */
+    white-space: normal; /* Allow text wrapping */
+    overflow: visible; /* Ensure full text is displayed */
+    display: block; /* Ensure block layout for abstract */
+    line-height: 1.6; /* Improved line height for readability */
+}
+
+/* Justified text for abstracts */
+.text-justify {
+    text-align: justify; /* Justify text for a professional look */
+    hyphens: auto; /* Enable hyphenation for better justification */
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    padding: 0.5rem; /* Add padding around the abstract */
+    max-height: 300px; /* Set a maximum height */
+    overflow-y: auto; /* Add scrolling if needed */
+}
+
+/* Abstract section styling */
+.abstract-section {
+    background-color: #f9fafb; /* Light background for the abstract section */
+    border-radius: 0.375rem; /* Rounded corners */
+    padding: 0.75rem; /* Padding inside the abstract section */
+    margin: 0.5rem 0; /* Margin above and below */
+    border: 1px solid #e5e7eb; /* Light border */
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-grow {
+    flex-grow: 1; /* Allow element to grow and take available space */
+}
+
+.abstract-heading {
+    color: #2563eb; /* Blue color for the heading */
+    margin-bottom: 0.5rem; /* Space below the heading */
+    font-weight: 600; /* Semi-bold font weight */
+}
+
+/* Authors section styling */
+.authors-section {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.authors-section h5 {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.authors-section p {
+    font-size: 0.9375rem;
+    color: #374151;
+    font-weight: 500;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.authors-section .inline-icon {
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem; /* Margin between journal items */
+}
+
+.hover\:shadow-md:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+/* Journal Item Styles */
+.border {
+    border: 1px solid #e2e8f0; /* Border for journal items */
+}
+
+.p-4 {
+    padding: 1.5rem; /* Padding for journal items */
+}
+
+.rounded-lg {
+    border-radius: 0.5rem; /* Rounded corners for items */
+}
+
+/* Journal Grid with flexbox - centered layout */
+.journal-grid {
+    display: flex; /* Changed to flexbox for horizontal layout */
+    flex-direction: row; /* Horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping for responsive design */
+    gap: 1.5rem; /* Optimized gap */
+    width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 1600px; /* Prevent too wide layout on large screens */
+}
+
+/* Journal Card sizing and layout */
+.journal-card {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 8px;
+    padding: 1.25rem; /* Optimized padding */
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    flex: 1 1 300px; /* Allow cards to grow and shrink with a minimum width */
+    max-width: 300px; /* Maximum width for cards */
+}
+
+.journal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.journal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, #63b3ed, #4299e1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.journal-card:hover::before {
+    opacity: 1;
+}
+
+/* Journal title link styles */
+.journal-title-link {
+    font-size: 1.1rem; /* Slightly smaller font size */
+    line-height: 1.4;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.journal-title-link:hover {
+    color: #2b6cb0;
+}
+
+.journal-card-header {
+    margin-bottom: 0.5rem;
+}
+
+.journal-card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.journal-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #718096;
+}
+
+.journal-abstract {
+    font-size: 0.9rem; /* Slightly smaller font for abstract */
+    line-height: 1.5;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.journal-abstract p {
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.journal-authors {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.journal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f7fafc;
+    border-radius: 10px;
+    border: 1px dashed #e2e8f0;
+}
+
+.no-results p {
+    font-size: 1.1rem;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+}
+
+.reset-search {
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: auto;
+}
+
+.reset-search:hover {
+    background-color: #2c5282;
+}
+
+.cursor-pointer {
+    cursor: pointer; /* Pointer for clickable items */
+}
+
+/* Status indicators */
+.rounded-full {
+    border-radius: 9999px; /* Full rounded styles */
+}
+
+.bg-green-100 {
+    background-color: #c6f6d5; /* Light green background */
+}
+
+.bg-yellow-100 {
+    background-color: #fefcbf; /* Light yellow background */
+}
+
+.text-sm {
+    font-size: 0.875rem; /* Smaller text for status labels */
+}
+
+/* Pagination Styles */
+.flex.justify-center {
+    margin-top: 2rem; /* Margin for pagination area */
+}
+
+/* Button Styling */
+.button-group, .actions {
+    display: flex;
+    gap: 0.75rem; /* Adds spacing between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+button {
+    padding: 0.625rem 1.5rem; /* Padding for buttons */
+    border-radius: 0.375rem; /* Rounded corners */
+    border: none; /* No border */
+    font-size: 0.875rem; /* Standard font size */
+    font-weight: 500; /* Medium font weight */
+    cursor: pointer; /* Pointer cursor for buttons */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    display: inline-flex; /* Better alignment for icon + text */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    min-width: 120px; /* Minimum width for buttons */
+    text-align: center; /* Center text */
+    margin-bottom: 0.5rem; /* Add some bottom margin */
+}
+
+/* Disabled Button */
+button:disabled {
+    opacity: 0.6; /* Reduced visibility for disabled buttons */
+    cursor: not-allowed; /* Not allowed cursor style */
+}
+
+/* Loading Spinner */
+.animate-spin {
+    animation: spin 1s linear infinite; /* Spinner animation */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg); /* Initial rotation */
+    }
+    100% {
+        transform: rotate(360deg); /* Full rotation */
+    }
+}
+
+/* Enhanced Pagination Styles */
+.pagination-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.75rem;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #edf2f7;
+    border-color: #cbd5e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    color: #a0aec0;
+}
+
+.pagination-button.active {
+    background-color: #3182ce;
+    color: white;
+    border-color: #2c5282;
+    font-weight: 600;
+}
+
+.page-info {
+    font-size: 0.95rem;
+    color: #718096;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Error Alert */
+.error-alert {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1.1rem;
+    color: #4a5568;
+}
+
+/* Responsive Styles */
+@media (max-width: 1280px) {
+    .modern-journal-list-container {
+        max-width: 98%;
+        padding: 1.5rem;
+    }
+
+    .journal-grid {
+        grid-template-columns: repeat(3, minmax(250px, 1fr)); /* 3 columns on smaller screens */
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .journal-grid {
+        grid-template-columns: repeat(2, minmax(250px, 1fr)); /* 2 columns on tablets */
+        gap: 1rem;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .modern-journal-list-container {
+        max-width: 100%;
+        margin: 1rem auto;
+        padding: 1rem;
+    }
+
+    .journal-list-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .journal-list-header p {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .search-filter-section {
+        padding: 1.5rem;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .search-input {
+        border-radius: 8px;
+    }
+
+    .search-button {
+        border-radius: 8px;
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    .filter-options {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .journal-grid {
+        grid-template-columns: repeat(1, 1fr); /* 1 column on mobile */
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .journal-row {
+        padding: 1rem;
+        gap: 1rem;
+        margin: 0;
+    }
+
+    .journal-card {
+        flex: 1 1 calc(100% - 2rem); /* One card per row */
+        max-width: 500px; /* Slightly wider on mobile */
+        margin: 1rem 0;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modern-journal-list-container {
+        padding: 0.75rem;
+    }
+
+    .journal-list-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .journal-actions {
+        flex-direction: column;
+    }
+
+    .pagination-button {
+        min-width: 2.25rem;
+        height: 2.25rem;
+        padding: 0 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .search-filter-section {
+        padding: 1rem;
+    }
+
+    .journal-grid {
+        gap: 1rem;
+    }
+
+    .journal-row {
+        padding: 0.75rem;
+    }
+
+    .journal-card {
+        flex: 0 0 260px;
+        min-width: 260px;
+    }
+}
+
+/* Journal title link styles */
+.journal-title-link {
+    text-decoration: none;
+    color: #2d3748;
+    transition: color 0.3s ease;
+}
+
+.journal-title-link:hover {
+    color: #2b6cb0;
+}
+
+/* Keywords section styling */
+.keywords-section {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #e5e7eb;
+}
+
+.keyword-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.keyword-tag {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.inline-icon {
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+/* Journal actions styling */
+.journal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+}
+
+.view-button,
+.download-button {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.view-button {
+    background-color: #3182ce;
+    color: white;
+}
+
+.view-button:hover {
+    background-color: #2c5282;
+}
+
+.download-button {
+    background-color: #e2e8f0;
+    color: #4a5568;
+    border: none;
+    cursor: pointer;
+}
+
+.download-button:hover {
+    background-color: #cbd5e0;
+    color: #2d3748;
+}

@@ -1,0 +1,254 @@
+/* Enhanced Carousel Styles */
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background-color: #111827; /* Dark gray background matching Tailwind's bg-gray-900 */
+  width: 100%;
+  border: 4px solid #e5e7eb; /* Light border matching border-gray-200 */
+}
+
+.carousel-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  z-index: 10;
+}
+
+.carousel-slide:not(.active) {
+  opacity: 0;
+  z-index: 0;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Changed from cover to contain to match your component */
+  background-color: #111827;
+}
+
+.carousel-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
+  opacity: 0.6;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  color: white;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 1s ease, opacity 1s ease;
+}
+
+.carousel-caption-hidden {
+  transform: translateY(2rem);
+  opacity: 0;
+}
+
+.carousel-caption-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption-text {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.carousel-nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  padding: 0.5rem;
+  color: white;
+  z-index: 20;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.carousel-nav-button.prev {
+  left: 1rem;
+}
+
+.carousel-nav-button.next {
+  right: 1rem;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 20;
+}
+
+.carousel-indicator {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.carousel-indicator.active {
+  background-color: white;
+  transform: scale(1.25);
+}
+
+.carousel-counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  z-index: 20;
+}
+
+/* Info toggle button */
+.carousel-info-toggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 50%;
+  z-index: 20;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-info-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Title badge at top */
+.carousel-title-badge {
+  position: absolute;
+  top: 3.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+
+.carousel-title-badge-content {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  max-width: 32rem;
+}
+
+.carousel-title-badge-text {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Info panel */
+.carousel-info-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 16rem;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 1rem;
+  z-index: 30;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.carousel-info-panel.hidden {
+  transform: translateX(100%);
+}
+
+.carousel-info-panel-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid white;
+}
+
+.carousel-info-section {
+  margin-bottom: 1rem;
+}
+
+.carousel-info-label {
+  font-weight: 600;
+  color: #d1d5db; /* text-gray-300 */
+}
+
+/* Touch support styles */
+.carousel-container.touch-active {
+  cursor: grabbing;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .carousel-info-panel {
+    width: 100%;
+    height: 50%;
+    top: auto;
+    bottom: 0;
+    transform: translateY(0);
+  }
+  
+  .carousel-info-panel.hidden {
+    transform: translateY(100%);
+  }
+  
+  .carousel-caption {
+    padding: 1rem;
+  }
+  
+  .carousel-caption-title {
+    font-size: 1.25rem;
+  }
+  
+  .carousel-caption-text {
+    font-size: 1rem;
+  }
+}

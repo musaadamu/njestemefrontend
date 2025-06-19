@@ -1,0 +1,193 @@
+.guide-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.guide-container h1 {
+  color: var(--primary-800);
+  text-align: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.guide-intro {
+  text-align: center;
+  color: var(--neutral-600);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.guide-intro:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, var(--primary-500), var(--secondary-500));
+  border-radius: 3px;
+}
+
+.guide-section {
+  margin-bottom: 2.5rem;
+  padding: 1.8rem;
+  background: var(--neutral-50);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--neutral-200);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.guide-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.guide-section h2 {
+  color: var(--primary-700);
+  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.guide-section h2:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--primary-500);
+  border-radius: 3px;
+}
+
+.guide-section ul, .guide-section ol {
+  padding-left: 1.5rem;
+  line-height: 1.6;
+}
+
+.guide-section li {
+  margin-bottom: 0.5rem;
+  color: #34495e;
+}
+
+.example-box {
+  background: var(--primary-50);
+  padding: 1.2rem;
+  border-left: 4px solid var(--primary-500);
+  margin-top: 1.2rem;
+  border-radius: 0 6px 6px 0;
+}
+
+.example-box h3 {
+  color: var(--primary-700);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Research Areas Styling */
+.research-areas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.area-column {
+  background: white;
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--neutral-200);
+}
+
+.area-column h3 {
+  color: var(--primary-700);
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-200);
+}
+
+.area-column ul {
+  padding-left: 1.2rem;
+}
+
+.area-column li {
+  margin-bottom: 0.4rem;
+  color: var(--neutral-700);
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.step {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--neutral-200);
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-300);
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+  color: white;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .guide-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .process-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .research-areas {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-section {
+    padding: 1.2rem;
+  }
+
+  .guide-container h1 {
+    font-size: 1.8rem;
+  }
+}

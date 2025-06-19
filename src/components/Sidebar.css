@@ -1,0 +1,209 @@
+/* Sidebar.css - Modern, Accessible, and Professional */
+
+/* Sidebar Container */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  background-color: #162447; /* Dark navy blue */
+  color: #ffffff;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.14);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  box-sizing: border-box;
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.sidebar-logo-img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #24335a;
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu-item {
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-menu-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, border-left 0.18s;
+  border-left: 3px solid transparent;
+  font-size: 1rem;
+  border-radius: 0 20px 20px 0;
+  font-weight: 500;
+}
+
+.sidebar-menu-link:hover,
+.sidebar-menu-link:focus {
+  background-color: rgba(99, 179, 237, 0.13); /* Light blue overlay */
+  color: #ffffff;
+  border-left-color: #63b3ed;
+}
+
+.sidebar-menu-link.active {
+  background-color: rgba(99, 179, 237, 0.18);
+  color: #ffffff;
+  border-left-color: #f59e0b;
+  font-weight: 600;
+}
+
+/* Sidebar Icons */
+.sidebar-icon {
+  width: 20px;
+  margin-right: 10px;
+  text-align: center;
+  color: #ffffff;
+  fill: #ffffff;
+  opacity: 0.95;
+}
+
+/* Section Divider */
+.sidebar-menu-divider {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 1rem;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Phone number or icon styling */
+.sidebar-phone,
+.sidebar-phone *,
+.sidebar-footer .fa-phone,
+.sidebar-footer .fa-phone-alt {
+  color: #fff !important;
+  fill: #fff !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 300px;
+    min-width: 220px;
+    z-index: 1100;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.22);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay when sidebar is open */
+  .sidebar.open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(20, 34, 71, 0.45);
+    z-index: -1;
+  }
+
+  .sidebar-header {
+    padding: 1.2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sidebar-menu-link {
+    padding: 1rem 1.5rem;
+    font-size: 1.08rem;
+    border-radius: 0 16px 16px 0;
+  }
+
+  .sidebar-close {
+    display: block;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+}
+
+/* Ensure the sidebar fills the entire height */
+.site-sidebar {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  box-sizing: border-box;
+  z-index: 40;
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+  overflow-x: hidden;
+}

@@ -1,0 +1,220 @@
+/* Welcome Section - Modern Design */
+
+/* Container */
+.welcome-section {
+  background: var(--neutral-50);
+  color: var(--neutral-800);
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  position: relative;
+  margin: 3rem auto;
+  max-width: 1400px;
+  width: 100%;
+}
+
+/* Welcome Content */
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Welcome Heading */
+.welcome-heading {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-700);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+  text-align: center;
+  background: none;
+  position: relative;
+  z-index: 10;
+}
+
+.welcome-heading span {
+  color: var(--primary-600);
+}
+
+/* Welcome Subheading */
+.welcome-subheading {
+  font-size: 1.5rem;
+  color: var(--neutral-600);
+  margin-bottom: var(--spacing-xl);
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Welcome Text */
+.welcome-text {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--neutral-600);
+  margin-bottom: 2.5rem;
+  max-width: 600px;
+  text-align: center;
+}
+
+/* Welcome Actions */
+.welcome-actions {
+  display: flex;
+  gap: var(--spacing-lg);
+  justify-content: center;
+}
+
+/* Buttons */
+.welcome-button {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: var(--shadow-md);
+}
+
+.welcome-button.primary {
+  background-color: var(--primary-600);
+  color: white;
+  border: 2px solid var(--primary-600);
+}
+
+.welcome-button.primary:hover {
+  background-color: var(--primary-700);
+  border-color: var(--primary-700);
+  transform: translateY(-2px);
+}
+
+.welcome-button.secondary {
+  background-color: var(--neutral-100);
+  color: var(--neutral-800);
+  border: 2px solid var(--neutral-300);
+}
+
+.welcome-button.secondary:hover {
+  background-color: var(--neutral-200);
+  color: var(--neutral-800);
+  transform: translateY(-2px);
+}
+
+/* Stats Section */
+.welcome-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-2xl);
+  margin-top: var(--spacing-3xl);
+  padding: var(--spacing-2xl);
+  background: var(--neutral-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--neutral-300);
+}
+
+.stat-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: var(--spacing-md) var(--spacing-sm);
+  background: white;
+  border-radius: var(--radius-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--neutral-300);
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-600);
+  margin-bottom: 0.75rem;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: var(--neutral-600);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+  line-height: 1.4;
+  max-width: 100%;
+  padding: 0 var(--spacing-xs);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .welcome-section {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
+  .welcome-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-heading {
+    font-size: 2.5rem;
+  }
+
+  .welcome-subheading {
+    font-size: 1.25rem;
+  }
+
+  .welcome-text {
+    font-size: 1.1rem;
+  }
+
+  .welcome-actions {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+  }
+
+  .welcome-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-heading {
+    font-size: 2rem;
+  }
+
+  .welcome-subheading {
+    font-size: 1rem;
+  }
+
+  .welcome-text {
+    font-size: 1rem;
+  }
+
+  .stat-item {
+    padding: var(--spacing-sm);
+    min-height: 120px;
+  }
+
+  .stat-number {
+    font-size: 2.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+  }
+}

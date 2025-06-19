@@ -1,0 +1,79 @@
+/* Journal Detail Styles */
+.max-w-3xl {
+    max-width: 800px; /* Limit maximum width for better readability */
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto; /* Center the component */
+}
+
+.bg-white {
+    background-color: #ffffff; /* White background for the details box */
+}
+
+.p-6 {
+    padding: 1.5rem; /* Padding inside the details box */
+}
+
+.shadow-md {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.rounded-lg {
+    border-radius: 0.5rem; /* Rounded corners for the box */
+}
+
+.text-2xl {
+    font-size: 1.875rem; /* Larger font for the title */
+}
+
+.font-bold {
+    font-weight: 700; /* Bold font for important text */
+}
+
+.mb-4 {
+    margin-bottom: 1rem; /* Spacing below the title */
+}
+
+.space-y-3 > :not(template) ~ :not(template) {
+    margin-top: 1rem; /* Spacing between paragraphs */
+}
+
+.bg-red-100 {
+    background-color: #fee2e2; /* Light red for error message */
+}
+
+.text-red-700 {
+    color: #b91c1c; /* Darker red for text in error message */
+}
+
+.text-blue-600 {
+    color: #3b82f6; /* Blue color for links */
+}
+
+.text-blue-600:hover {
+    text-decoration: underline; /* Underline on hover for links */
+}
+
+/* Loading and Error Messages */
+.text-gray-600 {
+    color: #4b5563; /* Medium gray for loading text */
+    font-size: 1rem; /* Standard font size */
+    text-align: center; /* Center the loading message */
+}
+
+/* Justified Text */
+.text-justify {
+    text-align: justify; /* Justify text for a professional look */
+    hyphens: auto; /* Enable hyphenation for better justification */
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .max-w-3xl {
+        width: 90%; /* Make it more fluid on smaller screens */
+    }
+}
