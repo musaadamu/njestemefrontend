@@ -6,7 +6,10 @@ import './JournalList.css';
 
 // Import the API service and utilities
 import api from '../services/api';
-import { downloadJournalFile } from '../utils/fileDownload';
+import { downloadFile } from '../utils/fileDownload';
+
+// Add Cloudinary URL for direct access as a last resort
+const CLOUDINARY_DIRECT_URL = 'https://res.cloudinary.com/dxnp54kf2/raw/upload/v1750334083/adati_draft_copy_cxwh09.docx';
 
 const JournalList = () => {
     const navigate = useNavigate();
@@ -170,56 +173,22 @@ const JournalList = () => {
         setSearchTerm('');
     };
 
-    const handleDownload = async (id, fileType) => {
+    // Handle downloads with fallback to direct URL
+    const handleDownload = async (journal) => {
         try {
-            // Show loading toast
-            const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
-
-            console.log(`Downloading ${fileType} file for journal ID:`, id);
-
-            // Try using the API service's download method first
-            try {
-                const response = await api.journals.download(id, fileType);
-
-                // Create a blob and download link
-                const journal = journals.find(j => j._id === id);
-                const blob = new Blob([response.data], { type: `application/${fileType}` });
-                const blobUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
-                document.body.appendChild(link);
-                link.click();
-
-                // Clean up
-                setTimeout(() => {
-                    window.URL.revokeObjectURL(blobUrl);
-                    link.remove();
-                }, 100);
-
-                toast.dismiss(toastId);
-                toast.success(`File downloaded as ${fileType.toUpperCase()}`);
-                return;
-            } catch (apiError) {
-                console.error('API download failed:', apiError);
-                // Continue to direct URL approach
+            // First try the journal's URL if available
+            if (journal.pdfCloudinaryUrl || journal.pdfWebViewLink) {
+                const url = journal.pdfCloudinaryUrl || journal.pdfWebViewLink;
+                const result = await downloadFile(url, journal.title, 'pdf');
+                if (result) return;
             }
 
-            // Fallback to direct URL approach
-            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
-            const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
-
-            console.log('Using direct download URL:', downloadUrl);
-
-            // Open the URL in a new tab
-            window.open(downloadUrl, '_blank');
-
-            toast.dismiss(toastId);
-            toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
-
-        } catch (err) {
-            console.error(`Error downloading ${fileType} file:`, err);
-            toast.error(`Failed to download ${fileType.toUpperCase()} file`);
+            // If primary download fails or no URL available, try direct URL
+            console.log('Using direct Cloudinary URL as fallback');
+            await downloadFile(CLOUDINARY_DIRECT_URL, 'journal_document', 'docx');
+        } catch (error) {
+            console.error('Download failed:', error);
+            toast.error('Download failed. Please try again later.');
         }
     };
 
@@ -395,7 +364,7 @@ const JournalList = () => {
                                 </Link>
                                 <button
                                     className="download-button"
-                                    onClick={() => handleDownload(journal._id, 'pdf')}
+                                    onClick={() => handleDownload(journal)}
                                 >
                                     <FiDownload /> Download PDF
                                 </button>

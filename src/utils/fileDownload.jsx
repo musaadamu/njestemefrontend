@@ -2,6 +2,9 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { isProduction } from '../services/api';
 
+// Direct Cloudinary URL for fallback
+const CLOUDINARY_DIRECT_URL = 'https://res.cloudinary.com/dxnp54kf2/raw/upload/v1750334083/adati_draft_copy_cxwh09.docx';
+
 /**
  * Utility function to download files from the server
  * @param {string} url - The full URL to download the file from
@@ -14,6 +17,18 @@ export const downloadFile = async (url, filename, fileType) => {
     const toastId = toast.loading(`Downloading ${fileType.toUpperCase()} file...`);
 
     try {
+        // If URL is the direct Cloudinary URL, use it directly
+        if (url === CLOUDINARY_DIRECT_URL) {
+            window.open(url, '_blank');
+            toast.update(toastId, {
+                render: 'Download started',
+                type: 'success',
+                isLoading: false,
+                autoClose: 3000
+            });
+            return true;
+        }
+
         // Get auth token
         const token = localStorage.getItem('authToken');
 
@@ -33,24 +48,14 @@ export const downloadFile = async (url, filename, fileType) => {
             url = `${baseUrl}${url}`;
         }
 
-        // For Cloudinary URLs, ensure we're using the correct domain and fl_attachment flag
+        // For Cloudinary URLs, ensure we're using the correct domain
         const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
-        if (isCloudinary && fileType === 'pdf' && !url.includes('fl_attachment')) {
-            url = url.replace('/upload/', '/upload/fl_attachment/');
-        }
-
+        
         // Make the request with axios
         const headers = {
             'Authorization': token ? `Bearer ${token}` : '',
             'Accept': '*/*'
         };
-
-        // Only add cache control headers for same-origin requests to avoid CORS issues
-        const isSameOrigin = url.startsWith(window.location.origin);
-        if (isSameOrigin) {
-            headers['Cache-Control'] = 'no-cache';
-            headers['Pragma'] = 'no-cache';
-        }
 
         // For Cloudinary URLs, use direct download
         if (isCloudinary) {
