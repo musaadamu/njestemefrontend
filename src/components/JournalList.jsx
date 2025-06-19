@@ -8,36 +8,6 @@ import './JournalList.css';
 import api from '../services/api';
 import { downloadJournalFile } from '../utils/fileDownload';
 
-// Add Cloudinary URLs for direct access as a last resort
-const CLOUDINARY_PDF_URLS = [
-    'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/coelsN_Uploads/1746729142888-1746729142665-tagans5.pdf',
-    'https://res.cloudinary.com/musaadamu/raw/upload/v1746728320/coelsN_Uploads/1746728285131-1746728284548-Tagans4.pdf',
-    'https://res.cloudinary.com/musaadamu/raw/upload/v1746723286/coelsN_Uploads/1746723283897-1746723283544-Tangas1.pdf'
-];
-
-// Helper function to try all Cloudinary URLs as a last resort
-const tryAllCloudinaryUrls = (title) => {
-    toast.info(`Trying direct Cloudinary access as last resort...`);
-
-    // Try to find a matching URL based on title
-    let urlIndex = 0;
-    if (title) {
-        const titleLower = title.toLowerCase();
-        if (titleLower.includes('tagans5')) urlIndex = 0;
-        else if (titleLower.includes('tagans4')) urlIndex = 1;
-        else if (titleLower.includes('tangas1')) urlIndex = 2;
-    }
-
-    // Open the URL as a fallback
-    window.open(CLOUDINARY_PDF_URLS[urlIndex], '_blank');
-
-    // If we're not sure which URL is correct, try the others after a delay
-    setTimeout(() => {
-        toast.info(`Trying alternative Cloudinary URL...`);
-        window.open(CLOUDINARY_PDF_URLS[(urlIndex + 1) % 3], '_blank');
-    }, 3000);
-};
-
 const JournalList = () => {
     const navigate = useNavigate();
     const [journals, setJournals] = useState([]);
@@ -68,7 +38,7 @@ const JournalList = () => {
             console.log('Fetching journals using API service');
             const response = await api.journals.getAll({
                 page,
-                limit: 9, // Changed to 9 journals per page
+                limit: 9,
                 sortBy: 'createdAt',
                 order: 'desc'
             });
@@ -89,7 +59,7 @@ const JournalList = () => {
                 currentPage: Number(response.data.pagination?.currentPage || page || 1),
                 totalPages: Number(response.data.pagination?.totalPages || Math.ceil(journalsData.length / 9) || 1),
                 totalJournals: Number(response.data.pagination?.totalJournals || journalsData.length || 0),
-                limit: 9 // Changed to 9 journals per page
+                limit: 9
             };
 
             console.log('Pagination data:', paginationData);
@@ -250,20 +220,6 @@ const JournalList = () => {
         } catch (err) {
             console.error(`Error downloading ${fileType} file:`, err);
             toast.error(`Failed to download ${fileType.toUpperCase()} file`);
-
-            // As a last resort for PDFs, try using the Cloudinary URLs directly
-            if (fileType === 'pdf') {
-                try {
-                    // Find the journal to get its title
-                    const journal = journals.find(j => j._id === id);
-                    if (journal) {
-                        toast.info('Attempting direct Cloudinary access...');
-                        tryAllCloudinaryUrls(journal.title);
-                    }
-                } catch (cloudinaryError) {
-                    console.error('Cloudinary direct access failed:', cloudinaryError);
-                }
-            }
         }
     };
 

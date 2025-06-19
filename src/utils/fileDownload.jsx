@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { isProduction } from '../services/api';
 
 /**
  * Utility function to download files from the server
@@ -24,8 +25,21 @@ export const downloadFile = async (url, filename, fileType) => {
             hasToken: !!token
         });
 
+        // If the URL is relative, prepend the correct base URL
+        if (url.startsWith('/')) {
+            const baseUrl = isProduction() 
+                ? 'https://njestemebackend.onrender.com' 
+                : 'http://localhost:5000';
+            url = `${baseUrl}${url}`;
+        }
+
+        // For Cloudinary URLs, ensure we're using the correct domain and fl_attachment flag
+        const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
+        if (isCloudinary && fileType === 'pdf' && !url.includes('fl_attachment')) {
+            url = url.replace('/upload/', '/upload/fl_attachment/');
+        }
+
         // Make the request with axios
-        // Remove problematic headers for CORS requests
         const headers = {
             'Authorization': token ? `Bearer ${token}` : '',
             'Accept': '*/*'
@@ -38,82 +52,31 @@ export const downloadFile = async (url, filename, fileType) => {
             headers['Pragma'] = 'no-cache';
         }
 
-        // For Cloudinary URLs, use a direct approach
-        const isCloudinary = url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
-
+        // For Cloudinary URLs, use direct download
         if (isCloudinary) {
-            console.log('Direct download from Cloudinary URL');
-
-            // For PDF files from Cloudinary, use a special approach to force download
-            if (fileType === 'pdf') {
-                console.log('Using special PDF download approach for Cloudinary');
-
-                // Try multiple approaches for PDF downloads from Cloudinary
-
-                // Approach 1: Use the download URL format
-                if (url.includes('/upload/')) {
-                    const downloadUrl = url.replace('/upload/', '/download/');
-                    console.log('Using Cloudinary download URL format:', downloadUrl);
-
-                    // Use the download URL
-                    window.open(downloadUrl, '_blank');
-                    return true;
-                }
-
-                // Approach 2: Use fl_attachment parameter
-                if (!url.includes('fl_attachment') && url.includes('/upload/')) {
-                    // Add the fl_attachment parameter to force download
-                    const attachmentUrl = url.replace('/upload/', '/upload/fl_attachment/');
-                    console.log('Using Cloudinary fl_attachment URL:', attachmentUrl);
-
-                    // Use the modified URL
-                    window.open(attachmentUrl, '_blank');
-                    return true;
-                }
-
-                // Fallback: Use the original URL
-                console.log('Using original Cloudinary URL for PDF download');
-                window.open(url, '_blank');
-            } else {
-                // For other file types, just open in a new tab
-                window.open(url, '_blank');
-            }
-
-            // Update toast
+            console.log('Direct download from Cloudinary URL:', url);
+            window.open(url, '_blank');
             toast.update(toastId, {
-                render: `Opening ${fileType.toUpperCase()} file in new tab`,
+                render: 'Download started',
                 type: 'success',
                 isLoading: false,
                 autoClose: 3000
             });
-
             return true;
         }
 
-        // For Render backend, ensure we're not sending credentials        const isRenderBackend = url.includes('coels-backend.onrender.com');
-        const isDirectFileEndpoint = url.includes('/direct-file/');
-
-        console.log('Request headers:', headers);
-        console.log('Request details:', { isRenderBackend, isDirectFileEndpoint });
-
+        // For other URLs, use axios to handle the download
         // Configure axios request
         const axiosConfig = {
             method: 'GET',
             url,
             responseType: 'blob',
             headers,
-            timeout: isRenderBackend ? 120000 : 60000, // Longer timeout for Render
+            timeout: 60000, // Default timeout
             withCredentials: false, // Disable sending cookies for cross-origin requests
             maxRedirects: 5, // Allow redirects
             validateStatus: status => status < 400 // Accept any successful status
         };
-
-        // For direct file endpoints, use simpler headers to avoid CORS issues
-        if (isDirectFileEndpoint) {
-            axiosConfig.headers = {
-                'Accept': '*/*'
-            };
-        }
 
         console.log('Axios config:', axiosConfig);
         const response = await axios(axiosConfig);

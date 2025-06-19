@@ -4,7 +4,7 @@ import axios from 'axios';
 const getBaseUrl = () => {
   // For production (Vercel deployment)
   if (import.meta.env.PROD) {
-    return 'https://coelsn-backend.onrender.com';
+    return 'https://njestemebackend.onrender.com';
   }
   // For local development
   return 'http://localhost:5000';
@@ -15,7 +15,7 @@ const apiBaseUrl = getBaseUrl();
 console.log('API Base URL:', apiBaseUrl);
 
 // Add a function to check if we're using the production API
-export const isProduction = () => apiBaseUrl.includes('coelsn-backend.onrender.com');
+export const isProduction = () => apiBaseUrl.includes('njestemebackend.onrender.com');
 
 // Create axios instance with base URL
 const api = axios.create({
