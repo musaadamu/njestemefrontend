@@ -50,19 +50,14 @@ const Navigation = ({ user, toggleSidebar }) => {
   ];
 
   return (
-    <nav className={`modern-navigation ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-container">
-        {/* Logo Section */}
-        <div className="nav-logo-section">
+    <nav className={`navigation ${scrolled ? 'scrolled' : ''} ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+      <div className="nav-content">
+        <div className="logo-container">
           <NavLink to="/" className="logo-link">
-            <img
-              src={logoPath}
-              alt="NJESTEME Journal Logo"
-              className="nav-logo-image"
-            />
+            <img src={logoPath} alt="Journal Logo" className="logo-image" />
             <div className="logo-text">
-<span className="logo-title">NJOSTEME</span>
-<span className="logo-subtitle">NJOSTEME</span>
+              <span className="logo-title">IJIRSTME</span>
+              <span className="logo-subtitle">IJIRSTME</span>
             </div>
           </NavLink>
         </div>
