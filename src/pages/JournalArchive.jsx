@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import api from '../services/api';
-import Navigation from '../components/Navigation.jsx';
+import { FiBookOpen, FiUsers, FiGrid, FiCalendar, FiSearch, FiDownload } from 'react-icons/fi';
 
-// Add Cloudinary URLs for direct access as a last resort
+// Helper function to try all Cloudinary URLs as a last resort
 const CLOUDINARY_PDF_URLS = [
     'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/October-December_2023_Volume_2_Issue_4_Final_j8apca.pdf',
     'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/October_2023_Volume_2_Issue_4_Final_Copy_jl6czk.pdf'
@@ -36,6 +36,30 @@ const JournalArchive = () => {
     const [filter, setFilter] = useState('all');
     const [yearFilter, setYearFilter] = useState('all');
     const [availableYears, setAvailableYears] = useState([]);
+
+    // Stats data
+    const stats = [
+        {
+            title: "Published Articles",
+            value: "100+",
+            icon: <FiBookOpen className="w-8 h-8" />
+        },
+        {
+            title: "Expert Reviewers",
+            value: "50+",
+            icon: <FiUsers className="w-8 h-8" />
+        },
+        {
+            title: "Research Fields",
+            value: "12",
+            icon: <FiGrid className="w-8 h-8" />
+        },
+        {
+            title: "Issues Per Year",
+            value: "4",
+            icon: <FiCalendar className="w-8 h-8" />
+        }
+    ];
 
     useEffect(() => {
         fetchJournals();
@@ -181,129 +205,110 @@ const JournalArchive = () => {
         }
     };
 
-    if (loading) return <div className="text-center py-10">Loading journals...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+            <div className="text-emerald-600 text-xl font-semibold">Loading journals...</div>
+        </div>
+    );
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <Navigation />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">Journal Archive</h1>
-                
-                {error && (
-                    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-                        <p>{error}</p>
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+            {/* Stats Section */}
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-700 shadow-lg py-12 mb-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl font-bold text-white mb-4">Journal Statistics</h2>
+                        <div className="w-20 h-1 bg-accent-500 mx-auto rounded-full"></div>
                     </div>
-                )}
-                
-                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                        <div className="flex flex-wrap items-center gap-4">
-                            <select 
-                                value={filter} 
-                                onChange={(e) => setFilter(e.target.value)}
-                                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            >
-                                <option value="all">All Status</option>
-                                <option value="Published">Published</option>
-                                <option value="Draft">Draft</option>
-                            </select>
-                            
-                            <select 
-                                value={yearFilter} 
-                                onChange={(e) => setYearFilter(e.target.value)}
-                                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            >
-                                <option value="all">All Years</option>
-                                {availableYears.map(year => (
-                                    <option key={year} value={year}>{year}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="w-full sm:w-auto">
-                            <input 
-                                type="text" 
-                                placeholder="Search journals..." 
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                        {filteredJournals.length === 0 ? (
-                            <div className="col-span-full text-center py-10 text-gray-500">
-                                No journals found matching your criteria
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {stats.map((stat, index) => (
+                            <div key={index} 
+                                className="relative overflow-hidden bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 shadow-xl transform hover:scale-105 transition-all duration-300">
+                                <div className="flex items-center space-x-4">
+                                    <div className="p-3 rounded-full bg-white/20 text-white">
+                                        {stat.icon}
+                                    </div>
+                                    <div>
+                                        <div className="text-4xl font-bold text-white mb-1">{stat.value}</div>
+                                        <div className="text-emerald-100">{stat.title}</div>
+                                    </div>
+                                </div>
+                                {/* Decorative gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 pointer-events-none"></div>
                             </div>
-                        ) : (
-                            filteredJournals.map(journal => (
-                                <div key={journal._id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-white">
-                                    <div className="p-6">
-                                        <div className="flex flex-col mb-4">
-                                            <h2 
-                                                className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer mb-2"
-                                                onClick={() => navigate(`/journals/${journal._id}`)}
-                                            >
-                                                {journal.title}
-                                            </h2>
-                                            
-                                            <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                                                <span className="flex items-center gap-1">
-                                                    <i className="fas fa-calendar-alt"></i>
-                                                    {new Date(journal.createdAt).toLocaleDateString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric'
-                                                    })}
-                                                </span>
-                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                                                    journal.status === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                                }`}>
-                                                    {journal.status || 'Draft'}
-                                                </span>
-                                            </div>
-                                        </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
-                                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Abstract</h3>
-                                            <p className="text-sm text-gray-600 line-clamp-2">
-                                                {journal.abstract || 'No abstract available'}
-                                            </p>
-                                        </div>
-                                        
-                                        <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                                            <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                                                <i className="fas fa-users mr-2"></i>Authors
-                                            </h3>
-                                            <p className="text-sm text-gray-600">
-                                                {Array.isArray(journal.authors) 
-                                                    ? journal.authors.join(', ')
-                                                    : typeof journal.authors === 'string'
-                                                        ? journal.authors
-                                                        : 'Unknown'}
-                                            </p>
-                                        </div>
-                                        
-                                        <div className="flex flex-wrap gap-2 mt-4">
-                                            <button
-                                                onClick={() => navigate(`/journals/${journal._id}`)}
-                                                className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
-                                            >
-                                                <i className="fas fa-eye mr-2"></i>
-                                                View
-                                            </button>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-emerald-100">
+                    <div className="p-6 border-b border-emerald-100">
+                        <h1 className="text-3xl font-bold text-emerald-800 mb-2">Journal Archive</h1>
+                        <p className="text-emerald-600">Browse through our collection of published articles</p>
+                    </div>
+                
+                    {error && (
+                        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 m-6" role="alert">
+                            <p>{error}</p>
+                        </div>
+                    )}
+                    
+                    <div className="p-6">
+                        <div className="flex flex-wrap items-center gap-4 mb-6">
+                            {/* Search and filter controls */}
+                            <div className="flex-1 min-w-[200px]">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        placeholder="Search journals..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full px-4 py-2 rounded-lg border border-emerald-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                                    />
+                                    <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                                </div>
+                            </div>
+
+                            {/* Filter controls */}
+                            <div className="flex gap-4 flex-wrap">
+                                <select
+                                    value={yearFilter}
+                                    onChange={(e) => setYearFilter(e.target.value)}
+                                    className="px-4 py-2 rounded-lg border border-emerald-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white"
+                                >
+                                    <option value="all">All Years</option>
+                                    {availableYears.map(year => (
+                                        <option key={year} value={year}>{year}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Journals grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredJournals.map((journal) => (
+                                <div key={journal._id} 
+                                    className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 border border-emerald-100 overflow-hidden">
+                                    <div className="p-6">
+                                        <h3 className="text-lg font-semibold text-emerald-800 mb-2">{journal.title}</h3>
+                                        <p className="text-emerald-600 text-sm mb-4 line-clamp-2">{journal.abstract}</p>
+                                        <div className="flex items-center justify-between mt-4">
                                             <button
                                                 onClick={() => handleDownload(journal._id, 'pdf')}
-                                                className="flex-1 flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors"
+                                                className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors duration-200"
                                             >
-                                                <i className="fas fa-file-pdf mr-2"></i>
-                                                PDF
+                                                <FiDownload className="mr-2" />
+                                                Download PDF
                                             </button>
+                                            <span className="text-emerald-500 text-sm">
+                                                {new Date(journal.createdAt).toLocaleDateString()}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                            ))
-                        )}
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
