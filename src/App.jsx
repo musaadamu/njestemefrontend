@@ -184,6 +184,7 @@ import Navigation from "./components/Navigation.jsx";
 import About from "./components/About.jsx";
 import Guide from "./components/Guide.jsx";
 import Contact from "./components/Contact.jsx";
+import EditorialBoard from "./pages/EditorialBoard.jsx";
 import Footer from "./components/Footer.jsx";
 import TestComponent from "./components/TestComponent.jsx";
 
@@ -216,6 +217,8 @@ function App() {
             <Route path="/archive" element={<JournalArchive />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/test" element={<TestComponent />} />
+
+            <Route path="/editorial-board" element={<EditorialBoard />} />
 
             {/* Protected Routes */}
             <Route path="/dashboard" element={
