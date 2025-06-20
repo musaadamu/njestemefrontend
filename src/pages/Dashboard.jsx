@@ -126,7 +126,7 @@ const Dashboard = () => {
             {/* Navigation Bar */}
             <nav className="dashboard-nav">
                 <div className="nav-content">
-                    <div className="nav-logo">COELSN Journal</div>
+                    <div className="nav-logo">IJIRSTME</div>
                     <div className="nav-links">
                         <Link to="/" className="nav-link">Home</Link>
                         <Link to="/about" className="nav-link">About Us</Link>

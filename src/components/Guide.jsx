@@ -5,7 +5,7 @@ const Guide = () => {
   return (
     <div className="guide-container">
       <h1>Author's Guide</h1>
-      <p className="guide-intro">Guidelines for submitting to the COELSN Journal of Interdisciplinary Academic Research and Development</p>
+      <p className="guide-intro">Guidelines for submitting to the International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)</p>
 
       <section className="guide-section">
         <h2>Manuscript Preparation</h2>
