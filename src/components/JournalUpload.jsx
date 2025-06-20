@@ -223,7 +223,7 @@ const JournalUpload = () => {
                     <div className="bg-white shadow-xl rounded-lg overflow-hidden">
                         <div className="p-6 sm:p-8">
                             <div className="flex justify-between items-center mb-8">
-<h2 className="text-2xl font-bold text-gray-800">Upload Article to Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</h2>
+<h2 className="text-2xl font-bold text-gray-800">Upload Article to International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)</h2>
                                 <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
                                     Academic Publishing
                                 </div>

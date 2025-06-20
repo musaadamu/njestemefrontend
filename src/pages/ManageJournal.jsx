@@ -358,7 +358,7 @@ export default function ManageJournal() {
 
     return (
         <div className="journal-management-container">
-<h1 className="text-2xl font-bold mb-4 text-center text-gray-800 border-b pb-3">Manage Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</h1>
+<h1 className="text-2xl font-bold mb-4 text-center text-gray-800 border-b pb-3">Manage International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)</h1>
 
             <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
                 <TabList>

@@ -110,7 +110,7 @@ const JournalSubmission = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="journal-submission-container max-w-4xl mx-auto">
-<h2 className="text-2xl font-bold mb-6">Submit Your Article to Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</h2>
+<h2 className="text-2xl font-bold mb-6">Submit Your Article to International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)</h2>
 
           <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
             <input

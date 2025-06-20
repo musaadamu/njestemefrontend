@@ -9,7 +9,7 @@
   text-align: center;
   margin-bottom: 3rem;
   padding: 3rem 0;
-  background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+  background: linear-gradient(135deg, #047857, #10b981, #14b8a6);
   color: white;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -54,8 +54,9 @@
 .vision, .mission {
   flex: 1;
   padding: 2rem;
-  background: #f8fafc;
+  background: #f0fdfa;
   border-radius: 8px;
+  border-left: 4px solid #14b8a6;
 }
 
 .institution-content {
@@ -81,7 +82,7 @@
   padding: 1.5rem;
   background: #f8fafc;
   border-radius: 10px;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #059669;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -94,8 +95,9 @@
 .contact-details {
   margin-top: 2rem;
   padding: 1rem;
-  background: #f8fafc;
+  background: #f0fdfa;
   border-radius: 8px;
+  border-left: 4px solid #ca8a04;
 }
 
 @media (max-width: 768px) {
