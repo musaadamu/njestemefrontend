@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./JournalUpload.css";
+import Navigation from "./Navigation"
 import api from "../services/api";
 
 const JournalUpload = () => {

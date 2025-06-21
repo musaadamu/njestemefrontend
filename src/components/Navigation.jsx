@@ -20,19 +20,21 @@ const Navigation = ({ user, toggleSidebar }) => {
   }, []);
 
   // Main navigation links - simplified for better horizontal layout
+  // Main navigation links - simplified for better horizontal layout
   const mainNavLinks = [
     { to: "/", label: "Home" },
     { to: "/dashboard", label: "Dashboard" },
     { to: "/journals", label: "Journals" },
     { to: "/submission", label: "Submit" },
     { to: "/archive", label: "Archive" },
+    { to: "/editorial-board", label: "Editorial Board" },
     { to: "/about", label: "About" },
     { to: "/guide", label: "Guide" },
     { to: "/contact", label: "Contact" },
     { to: "/manage-journals", label: "Manage" },
     { to: "/journals/uploads", label: "Upload" }
   ];
-
+  
   // User navigation links
   const userNavLinks = user ? [
     { to: "/dashboard", label: "Dashboard" },
