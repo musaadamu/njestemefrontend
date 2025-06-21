@@ -3,13 +3,13 @@ import { NavLink } from 'react-router-dom';
 import "./Navigation.css";
 
 const Navigation = ({ user, toggleSidebar }) => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024); // Increased breakpoint
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const logoPath = "/images/logo.JPG";
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1024); // Increased breakpoint
     };
 
     window.addEventListener('resize', handleResize);
@@ -19,42 +19,44 @@ const Navigation = ({ user, toggleSidebar }) => {
     };
   }, []);
 
-  // Main navigation links - simplified for better horizontal layout
-  // Main navigation links - simplified for better horizontal layout
-  const mainNavLinks = [
-    { to: "/", label: "Home" },
+  // Core navigation links - prioritized and condensed
+  const coreNavLinks = [
+    { to: "/", label: "Home", priority: 1 },
+    { to: "/journals", label: "Journals", priority: 2 },
+    { to: "/submission", label: "Submit", priority: 3 },
+    { to: "/editorial-board", label: "Editorial", priority: 4 },
+    { to: "/about", label: "About", priority: 5 }
+  ];
+
+  // Secondary navigation links - shown in dropdown
+  const secondaryNavLinks = [
     { to: "/dashboard", label: "Dashboard" },
-    { to: "/journals", label: "Journals" },
-    { to: "/submission", label: "Submit" },
     { to: "/archive", label: "Archive" },
-    { to: "/editorial-board", label: "Editorial Board" },
-    { to: "/about", label: "About" },
     { to: "/guide", label: "Guide" },
     { to: "/contact", label: "Contact" },
     { to: "/manage-journals", label: "Manage" },
     { to: "/journals/uploads", label: "Upload" }
   ];
-  
-  // User navigation links
+
+  // User navigation links - always visible
   const userNavLinks = user ? [
-    { to: "/dashboard", label: "Dashboard" },
-    { to: "/updateprofile", label: "Profile" },
-    { to: "/logout", label: "Logout" }
+    { to: "/dashboard", label: "Dashboard", icon: "📊" },
+    { to: "/updateprofile", label: "Profile", icon: "👤" },
+    { to: "/logout", label: "Logout", icon: "🚪" }
   ] : [
-    { to: "/register", label: "Register" },
-    { to: "/login", label: "Login" }
+    { to: "/register", label: "Register", icon: "📝" },
+    { to: "/login", label: "Login", icon: "🔑" }
   ];
 
   return (
     <nav className="navigation">
       <div className="nav-container">
-        {/* Logo Section */}
+        {/* Logo Section - Optimized */}
         <div className="logo-section">
           <NavLink to="/" className="logo-link">
-            <img src={logoPath} alt="Journal Logo" className="logo-image" />
+            <img src={logoPath} alt="IJIRSTME" className="logo-image" />
             <div className="logo-text">
               <span className="logo-title">IJIRSTME</span>
-              <span className="logo-subtitle">International Journal</span>
             </div>
           </NavLink>
         </div>
@@ -62,8 +64,9 @@ const Navigation = ({ user, toggleSidebar }) => {
         {/* Desktop Navigation */}
         {!isMobile && (
           <div className="nav-menu">
+            {/* Core Navigation Links */}
             <div className="nav-links-container">
-              {mainNavLinks.map((link) => (
+              {coreNavLinks.map((link) => (
                 <NavLink 
                   key={link.to} 
                   to={link.to} 
@@ -74,8 +77,27 @@ const Navigation = ({ user, toggleSidebar }) => {
                   {link.label}
                 </NavLink>
               ))}
+              
+              {/* More Dropdown */}
+              <div className="dropdown-container">
+                <button className="dropdown-trigger">
+                  More <span className="dropdown-arrow">▼</span>
+                </button>
+                <div className="dropdown-menu">
+                  {secondaryNavLinks.map((link) => (
+                    <NavLink
+                      key={link.to}
+                      to={link.to}
+                      className="dropdown-link"
+                    >
+                      {link.label}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
             </div>
             
+            {/* User Section - Always Visible */}
             <div className="user-section">
               {userNavLinks.map((link) => (
                 <NavLink 
@@ -84,8 +106,10 @@ const Navigation = ({ user, toggleSidebar }) => {
                   className={({ isActive }) => 
                     `user-link ${isActive ? 'active' : ''}`
                   }
+                  title={link.label}
                 >
-                  {link.label}
+                  <span className="user-link-icon">{link.icon}</span>
+                  <span className="user-link-text">{link.label}</span>
                 </NavLink>
               ))}
             </div>
@@ -105,15 +129,17 @@ const Navigation = ({ user, toggleSidebar }) => {
               </svg>
             </button>
             
-            <button
-              className="sidebar-toggle"
-              onClick={toggleSidebar}
-              aria-label="Toggle sidebar"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 6h16M4 12h16m-7 6h7"/>
-              </svg>
-            </button>
+            {toggleSidebar && (
+              <button
+                className="sidebar-toggle"
+                onClick={toggleSidebar}
+                aria-label="Toggle sidebar"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+              </button>
+            )}
           </div>
         )}
 
@@ -122,7 +148,7 @@ const Navigation = ({ user, toggleSidebar }) => {
           <div className={`mobile-menu-overlay ${mobileMenuOpen ? 'open' : ''}`}>
             <div className="mobile-menu">
               <div className="mobile-menu-header">
-                <h3>Menu</h3>
+                <h3>Navigation</h3>
                 <button
                   className="close-button"
                   onClick={() => setMobileMenuOpen(false)}
@@ -135,8 +161,9 @@ const Navigation = ({ user, toggleSidebar }) => {
               </div>
               
               <div className="mobile-links">
-                <div className="mobile-main-links">
-                  {mainNavLinks.map((link) => (
+                <div className="mobile-section">
+                  <h4>Main Navigation</h4>
+                  {[...coreNavLinks, ...secondaryNavLinks].map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
@@ -150,7 +177,8 @@ const Navigation = ({ user, toggleSidebar }) => {
                 
                 <div className="mobile-divider"></div>
                 
-                <div className="mobile-user-links">
+                <div className="mobile-section">
+                  <h4>Account</h4>
                   {userNavLinks.map((link) => (
                     <NavLink
                       key={link.to}
@@ -158,6 +186,7 @@ const Navigation = ({ user, toggleSidebar }) => {
                       className="mobile-link"
                       onClick={() => setMobileMenuOpen(false)}
                     >
+                      <span className="mobile-link-icon">{link.icon}</span>
                       {link.label}
                     </NavLink>
                   ))}
