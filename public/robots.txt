@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://njostemejournal.com.ng/sitemap.xml
