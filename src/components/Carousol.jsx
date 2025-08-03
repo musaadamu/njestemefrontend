@@ -19,7 +19,7 @@ export default function ImprovedCarousel({
       description: "Promoting innovative research across disciplines"
     },
     {
-      src: "/images/image2.JPG.JPG",
+      src: "/images/image10.jpg",
       alt: "Academic Research",
       title: "Interdisciplinary Collaboration",
       description: "Connecting researchers across academic boundaries"
