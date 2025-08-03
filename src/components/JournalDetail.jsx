@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import './JournalDetails.css';
 
 // Add Cloudinary URLs for direct access as a last resort
@@ -125,8 +126,41 @@ const JournalDetail = () => {
     if (loading) return <p className="text-gray-600">Loading...</p>;
     if (error) return <div className="bg-red-100 text-red-700 p-3 rounded">{error}</div>;
 
+    // Prepare structured data for SEO
+    const structuredData = journal ? {
+        "@context": "https://schema.org",
+        "@type": "ScholarlyArticle",
+        "headline": journal.title,
+        "abstract": journal.abstract,
+        "author": Array.isArray(journal.authors) ? journal.authors.map(author => ({
+            "@type": "Person",
+            "name": typeof author === 'string' ? author : author.name
+        })) : [],
+        "datePublished": journal.publishedDate ? new Date(journal.publishedDate).toISOString() : new Date().toISOString(),
+        "keywords": Array.isArray(journal.keywords) ? journal.keywords.join(', ') : '',
+        "publisher": {
+            "@type": "Organization",
+            "name": "International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)"
+        },
+        "url": `https://njostemejournal.com.ng/journals/${journal._id}`
+    } : {};
+
     return (
         <div className="max-w-3xl mx-auto bg-white p-6 shadow-md rounded-lg">
+            {/* SEO Meta Tags */}
+            <Helmet>
+                <title>{journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME'}</title>
+                <meta name="description" content={journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`} />
+                <meta name="keywords" content={journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education'} />
+                <meta property="og:title" content={journal?.title || 'Untitled Journal'} />
+                <meta property="og:description" content={journal?.abstract?.substring(0, 200) || 'Research paper details'} />
+                <meta property="og:type" content="article" />
+                <meta property="og:url" content={`https://njostemejournal.com.ng/journals/${id}`} />
+                <script type="application/ld+json">
+                    {JSON.stringify(structuredData)}
+                </script>
+            </Helmet>
+
             <h2 className="text-2xl font-bold mb-4">{journal?.title || 'Untitled Journal'}</h2>
 
             <div className="space-y-3">
