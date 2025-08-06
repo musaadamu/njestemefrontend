@@ -24,8 +24,12 @@ export default function EditorialBoard() {
       affiliation: "Jomo Kenyatta University, Nairobi"
     },
     {
-      name: "Dr. H. J. Gunda",
-      affiliation: "Department of Chemistry Education, F. C.E (T) Potiskum"
+      name: "Prof. F.M. Joda",
+      affiliation: "Department of Environmental and Life Sciences, Modibbo Adama University, Yola"
+    },
+    {
+      name: "Dr. K. Waziri",
+      affiliation: "Department of Environmental and Life Sciences, Modibbo Adama University, Yola"
     },
     {
       name: "Sajid P. K. S, PhD",
