@@ -1,9 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import './JournalDetails.css';
+
+// Custom hook to manage document head
+const useDocumentHead = (title, description, keywords, ogData, structuredData) => {
+    useEffect(() => {
+        // Update document title
+        if (title) {
+            document.title = title;
+        }
+
+        // Update meta tags
+        const updateMetaTag = (name, content, property = false) => {
+            if (!content) return;
+
+            const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+            let meta = document.querySelector(selector);
+
+            if (!meta) {
+                meta = document.createElement('meta');
+                if (property) {
+                    meta.setAttribute('property', name);
+                } else {
+                    meta.setAttribute('name', name);
+                }
+                document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
+        };
+
+        // Update basic meta tags
+        updateMetaTag('description', description);
+        updateMetaTag('keywords', keywords);
+
+        // Update Open Graph tags
+        if (ogData) {
+            updateMetaTag('og:title', ogData.title, true);
+            updateMetaTag('og:description', ogData.description, true);
+            updateMetaTag('og:type', ogData.type, true);
+            updateMetaTag('og:url', ogData.url, true);
+        }
+
+        // Update structured data
+        if (structuredData) {
+            let script = document.querySelector('script[type="application/ld+json"]');
+            if (!script) {
+                script = document.createElement('script');
+                script.type = 'application/ld+json';
+                document.head.appendChild(script);
+            }
+            script.textContent = JSON.stringify(structuredData);
+        }
+
+        // Cleanup function to reset title when component unmounts
+        return () => {
+            document.title = 'IJIRSTME - International Journal';
+        };
+    }, [title, description, keywords, ogData, structuredData]);
+};
 
 // Add Cloudinary URLs for direct access as a last resort
 const CLOUDINARY_PDF_URLS = [
@@ -145,21 +201,22 @@ const JournalDetail = () => {
         "url": `https://njostemejournal.com.ng/journals/${journal._id}`
     } : {};
 
+    // Use custom hook to manage document head
+    useDocumentHead(
+        journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME',
+        journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`,
+        journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education',
+        {
+            title: journal?.title || 'Untitled Journal',
+            description: journal?.abstract?.substring(0, 200) || 'Research paper details',
+            type: 'article',
+            url: `https://njostemejournal.com.ng/journals/${id}`
+        },
+        structuredData
+    );
+
     return (
         <div className="max-w-3xl mx-auto bg-white p-6 shadow-md rounded-lg">
-            {/* SEO Meta Tags */}
-            <Helmet>
-                <title>{journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME'}</title>
-                <meta name="description" content={journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`} />
-                <meta name="keywords" content={journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education'} />
-                <meta property="og:title" content={journal?.title || 'Untitled Journal'} />
-                <meta property="og:description" content={journal?.abstract?.substring(0, 200) || 'Research paper details'} />
-                <meta property="og:type" content="article" />
-                <meta property="og:url" content={`https://njostemejournal.com.ng/journals/${id}`} />
-                <script type="application/ld+json">
-                    {JSON.stringify(structuredData)}
-                </script>
-            </Helmet>
 
             <h2 className="text-2xl font-bold mb-4">{journal?.title || 'Untitled Journal'}</h2>
 

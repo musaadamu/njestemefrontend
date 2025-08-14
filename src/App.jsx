@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { HelmetProvider } from 'react-helmet-async';
 import "react-toastify/dist/ReactToastify.css";
 
 import LoginPage from "./pages/LoginPage.jsx";
@@ -33,8 +32,7 @@ function App() {
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   return (
-    <HelmetProvider>
-      <Router>
+    <Router>
         <div className="min-h-screen bg-slate-900 text-gray-100 flex flex-col">
           {/* Navigation */}
           <div className="fixed top-0 left-0 right-0 z-50">
@@ -111,7 +109,6 @@ function App() {
           />
         </div>
       </Router>
-    </HelmetProvider>
   );
 }
 
