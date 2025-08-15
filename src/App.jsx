@@ -26,10 +26,10 @@ import Contact from "./components/Contact.jsx";
 import EditorialBoard from "./pages/EditorialBoard.jsx";
 import Footer from "./components/Footer.jsx";
 import TestComponent from "./components/TestComponent.jsx";
+import { userStorage } from "./utils/security.js";
 
 function App() {
-  const storedUser = localStorage.getItem('authUser');
-  const user = storedUser ? JSON.parse(storedUser) : null;
+  const user = userStorage.get();
 
   return (
     <Router>

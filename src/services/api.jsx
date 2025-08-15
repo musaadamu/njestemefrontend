@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { tokenStorage, securityLogger, csrfProtection } from '../utils/security';
 
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
@@ -27,6 +28,82 @@ const api = axios.create({
   },
   withCredentials: false // Disable cookies for cross-origin requests
 });
+
+// Request interceptor for security
+api.interceptors.request.use(
+  (config) => {
+    // Add authentication token
+    const token = tokenStorage.get();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Add CSRF token for state-changing requests
+    if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+      const csrfToken = csrfProtection.getToken();
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
+    }
+
+    // Log security-relevant requests
+    if (config.url?.includes('auth') || config.url?.includes('admin')) {
+      securityLogger.log('API_REQUEST', {
+        method: config.method,
+        url: config.url,
+        hasAuth: !!token
+      });
+    }
+
+    return config;
+  },
+  (error) => {
+    securityLogger.log('API_REQUEST_ERROR', { error: error.message });
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor for security
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Handle authentication errors
+    if (error.response?.status === 401) {
+      securityLogger.log('AUTHENTICATION_ERROR', {
+        url: error.config?.url,
+        status: error.response.status
+      });
+
+      // Clear tokens on authentication failure
+      tokenStorage.remove();
+
+      // Redirect to login if not already there
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
+
+    // Handle authorization errors
+    if (error.response?.status === 403) {
+      securityLogger.log('AUTHORIZATION_ERROR', {
+        url: error.config?.url,
+        status: error.response.status
+      });
+    }
+
+    // Handle rate limiting
+    if (error.response?.status === 429) {
+      securityLogger.log('RATE_LIMIT_EXCEEDED', {
+        url: error.config?.url,
+        retryAfter: error.response.headers['retry-after']
+      });
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // Log configuration for debugging
 console.log('API Configuration:', {
@@ -83,7 +160,7 @@ api.interceptors.response.use(
 );
 
 const downloadFile = async (url) => {
-  const token = localStorage.getItem('authToken');
+  const token = tokenStorage.get();
   const headers = {
     'Accept': '*/*',
     'Authorization': token ? `Bearer ${token}` : ''
@@ -114,17 +191,48 @@ api.auth = {
       .then(response => {
         console.log('Login response:', response.data);
         if (response.data.token) {
-          localStorage.setItem('authToken', response.data.token);
-          localStorage.setItem('authUser', JSON.stringify(response.data.user));
+          // Use secure token storage
+          tokenStorage.set(response.data.token);
+          if (response.data.user) {
+            userStorage.set(response.data.user);
+          }
+
+          // Generate and store CSRF token
+          const csrfToken = csrfProtection.generateToken();
+          csrfProtection.setToken(csrfToken);
+
+          securityLogger.log('USER_LOGIN', {
+            userId: response.data.user?.id,
+            email: response.data.user?.email
+          });
         }
         return response;
       });
   },
-  register: (userData) => api.post('/auth/register', userData),
+  register: (userData) => {
+    return api.post('/auth/register', userData)
+      .then(response => {
+        securityLogger.log('USER_REGISTER', {
+          email: userData.email
+        });
+        return response;
+      });
+  },
   profile: () => api.get('/auth/me'),
   updateProfile: (userData) => api.put('/auth/profile', userData),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
   resetPassword: (token, password) => api.post(`/auth/reset-password/${token}`, { password }),
+  logout: () => {
+    // Clear all stored tokens and user data
+    tokenStorage.remove();
+    userStorage.remove();
+    csrfProtection.removeToken();
+
+    securityLogger.log('USER_LOGOUT');
+
+    // Redirect to login page
+    window.location.href = '/login';
+  },
   checkAdmin: async () => {
     try {
       const response = await api.get('/auth/me');
@@ -182,13 +290,22 @@ api.journals = {
     throw lastError || new Error('All download attempts failed');
   },
   upload: async (formData) => {
+    const token = tokenStorage.get();
+    const csrfToken = csrfProtection.getToken();
+
+    securityLogger.log('FILE_UPLOAD_ATTEMPT', {
+      hasAuth: !!token,
+      hasCsrf: !!csrfToken
+    });
+
     return axios({
       method: 'POST',
       url: `${apiBaseUrl}/api/journals`,
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        'Authorization': token ? `Bearer ${token}` : '',
+        'X-CSRF-Token': csrfToken || ''
       },
       timeout: 60000, // 60 seconds timeout for uploads
       withCredentials: false // Disable cookies for cross-origin requests
