@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
@@ -7,28 +7,33 @@ import './JournalDetails.css';
 // Custom hook to manage document head
 const useDocumentHead = (title, description, keywords, ogData, structuredData) => {
     useEffect(() => {
+        // Only update if we have valid data
+        if (!title || !description) return;
+
         // Update document title
-        if (title) {
-            document.title = title;
-        }
+        document.title = title;
 
         // Update meta tags
         const updateMetaTag = (name, content, property = false) => {
             if (!content) return;
 
-            const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
-            let meta = document.querySelector(selector);
+            try {
+                const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+                let meta = document.querySelector(selector);
 
-            if (!meta) {
-                meta = document.createElement('meta');
-                if (property) {
-                    meta.setAttribute('property', name);
-                } else {
-                    meta.setAttribute('name', name);
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    if (property) {
+                        meta.setAttribute('property', name);
+                    } else {
+                        meta.setAttribute('name', name);
+                    }
+                    document.head.appendChild(meta);
                 }
-                document.head.appendChild(meta);
+                meta.setAttribute('content', content);
+            } catch (error) {
+                console.warn('Error updating meta tag:', name, error);
             }
-            meta.setAttribute('content', content);
         };
 
         // Update basic meta tags
@@ -36,7 +41,7 @@ const useDocumentHead = (title, description, keywords, ogData, structuredData) =
         updateMetaTag('keywords', keywords);
 
         // Update Open Graph tags
-        if (ogData) {
+        if (ogData && typeof ogData === 'object') {
             updateMetaTag('og:title', ogData.title, true);
             updateMetaTag('og:description', ogData.description, true);
             updateMetaTag('og:type', ogData.type, true);
@@ -44,14 +49,18 @@ const useDocumentHead = (title, description, keywords, ogData, structuredData) =
         }
 
         // Update structured data
-        if (structuredData) {
-            let script = document.querySelector('script[type="application/ld+json"]');
-            if (!script) {
-                script = document.createElement('script');
-                script.type = 'application/ld+json';
-                document.head.appendChild(script);
+        if (structuredData && typeof structuredData === 'object' && Object.keys(structuredData).length > 0) {
+            try {
+                let script = document.querySelector('script[type="application/ld+json"]');
+                if (!script) {
+                    script = document.createElement('script');
+                    script.type = 'application/ld+json';
+                    document.head.appendChild(script);
+                }
+                script.textContent = JSON.stringify(structuredData);
+            } catch (error) {
+                console.warn('Error updating structured data:', error);
             }
-            script.textContent = JSON.stringify(structuredData);
         }
 
         // Cleanup function to reset title when component unmounts
@@ -114,6 +123,16 @@ const JournalDetail = () => {
 
         fetchJournal();
     }, [id]);
+
+    // Simple fallback title update
+    useEffect(() => {
+        if (journal?.title) {
+            document.title = `${journal.title} - IJIRSTME`;
+        }
+        return () => {
+            document.title = 'IJIRSTME - International Journal';
+        };
+    }, [journal?.title]);
 
     const handleDownload = async (fileType) => {
         try {
@@ -181,37 +200,58 @@ const JournalDetail = () => {
 
     if (loading) return <p className="text-gray-600">Loading...</p>;
     if (error) return <div className="bg-red-100 text-red-700 p-3 rounded">{error}</div>;
+    if (!journal) return <div className="bg-yellow-100 text-yellow-700 p-3 rounded">Journal not found</div>;
 
-    // Prepare structured data for SEO
-    const structuredData = journal ? {
-        "@context": "https://schema.org",
-        "@type": "ScholarlyArticle",
-        "headline": journal.title,
-        "abstract": journal.abstract,
-        "author": Array.isArray(journal.authors) ? journal.authors.map(author => ({
-            "@type": "Person",
-            "name": typeof author === 'string' ? author : author.name
-        })) : [],
-        "datePublished": journal.publishedDate ? new Date(journal.publishedDate).toISOString() : new Date().toISOString(),
-        "keywords": Array.isArray(journal.keywords) ? journal.keywords.join(', ') : '',
-        "publisher": {
-            "@type": "Organization",
-            "name": "International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)"
-        },
-        "url": `https://njostemejournal.com.ng/journals/${journal._id}`
-    } : {};
+    // Memoize structured data for SEO to prevent infinite re-renders
+    const structuredData = useMemo(() => {
+        if (!journal) return {};
 
-    // Use custom hook to manage document head
+        return {
+            "@context": "https://schema.org",
+            "@type": "ScholarlyArticle",
+            "headline": journal.title,
+            "abstract": journal.abstract,
+            "author": Array.isArray(journal.authors) ? journal.authors.map(author => ({
+                "@type": "Person",
+                "name": typeof author === 'string' ? author : author.name
+            })) : [],
+            "datePublished": journal.publishedDate ? new Date(journal.publishedDate).toISOString() : new Date().toISOString(),
+            "keywords": Array.isArray(journal.keywords) ? journal.keywords.join(', ') : '',
+            "publisher": {
+                "@type": "Organization",
+                "name": "International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)"
+            },
+            "url": `https://njostemejournal.com.ng/journals/${journal._id}`
+        };
+    }, [journal]);
+
+    // Memoize Open Graph data
+    const ogData = useMemo(() => ({
+        title: journal?.title || 'Untitled Journal',
+        description: journal?.abstract?.substring(0, 200) || 'Research paper details',
+        type: 'article',
+        url: `https://njostemejournal.com.ng/journals/${id}`
+    }), [journal?.title, journal?.abstract, id]);
+
+    // Memoize meta values
+    const metaTitle = useMemo(() =>
+        journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME'
+    , [journal?.title]);
+
+    const metaDescription = useMemo(() =>
+        journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`
+    , [journal?.abstract, journal?.title]);
+
+    const metaKeywords = useMemo(() =>
+        journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education'
+    , [journal?.keywords]);
+
+    // Use custom hook to manage document head (only when journal data is available)
     useDocumentHead(
-        journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME',
-        journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`,
-        journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education',
-        {
-            title: journal?.title || 'Untitled Journal',
-            description: journal?.abstract?.substring(0, 200) || 'Research paper details',
-            type: 'article',
-            url: `https://njostemejournal.com.ng/journals/${id}`
-        },
+        metaTitle,
+        metaDescription,
+        metaKeywords,
+        ogData,
         structuredData
     );
 
