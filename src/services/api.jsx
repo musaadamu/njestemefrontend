@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { tokenStorage, userStorage, securityLogger, csrfProtection } from '../utils/security';
+import { tokenStorage, userStorage, securityLogger } from '../utils/security';
+// import { csrfProtection } from '../utils/security'; // Temporarily disabled
 
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
@@ -38,13 +39,14 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Add CSRF token for state-changing requests
-    if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
-      const csrfToken = csrfProtection.getToken();
-      if (csrfToken) {
-        config.headers['X-CSRF-Token'] = csrfToken;
-      }
-    }
+    // CSRF token temporarily disabled to resolve CORS issues
+    // TODO: Re-enable CSRF protection after CORS is fully configured
+    // if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase())) {
+    //   const csrfToken = csrfProtection.getToken();
+    //   if (csrfToken) {
+    //     config.headers['X-CSRF-Token'] = csrfToken;
+    //   }
+    // }
 
     // Log security-relevant requests
     if (config.url?.includes('auth') || config.url?.includes('admin')) {
@@ -197,9 +199,9 @@ api.auth = {
             userStorage.set(response.data.user);
           }
 
-          // Generate and store CSRF token
-          const csrfToken = csrfProtection.generateToken();
-          csrfProtection.setToken(csrfToken);
+          // CSRF token generation temporarily disabled
+          // const csrfToken = csrfProtection.generateToken();
+          // csrfProtection.setToken(csrfToken);
 
           securityLogger.log('USER_LOGIN', {
             userId: response.data.user?.id,
@@ -226,7 +228,7 @@ api.auth = {
     // Clear all stored tokens and user data
     tokenStorage.remove();
     userStorage.remove();
-    csrfProtection.removeToken();
+    // csrfProtection.removeToken(); // Temporarily disabled
 
     securityLogger.log('USER_LOGOUT');
 
@@ -291,11 +293,9 @@ api.journals = {
   },
   upload: async (formData) => {
     const token = tokenStorage.get();
-    const csrfToken = csrfProtection.getToken();
 
     securityLogger.log('FILE_UPLOAD_ATTEMPT', {
-      hasAuth: !!token,
-      hasCsrf: !!csrfToken
+      hasAuth: !!token
     });
 
     return axios({
@@ -304,8 +304,7 @@ api.journals = {
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': token ? `Bearer ${token}` : '',
-        'X-CSRF-Token': csrfToken || ''
+        'Authorization': token ? `Bearer ${token}` : ''
       },
       timeout: 60000, // 60 seconds timeout for uploads
       withCredentials: false // Disable cookies for cross-origin requests
