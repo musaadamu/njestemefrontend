@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { fileUploadSecurity, rateLimiting, securityLogger } from '../utils/security';
+import { fileUploadSecurity, securityLogger } from '../utils/security';
 import './JournalSubmission.css';
 
 // Determine API base URL based on environment and available URLs
@@ -62,12 +62,7 @@ const JournalSubmission = () => {
         return;
       }
 
-      // Check rate limiting
-      if (!rateLimiting.canAttempt('journal_submission', 3, 60 * 60 * 1000)) { // 3 attempts per hour
-        toast.error('Too many submission attempts. Please try again later.');
-        securityLogger.log('RATE_LIMIT_EXCEEDED', { action: 'journal_submission' });
-        return;
-      }
+      // Rate limiting removed
 
       setLoading(true);
       setSuccess(false);
@@ -94,8 +89,7 @@ const JournalSubmission = () => {
           setFile(null);
           setSuccess(true);
 
-          // Record successful submission
-          rateLimiting.recordAttempt('journal_submission');
+          // Log successful submission
           securityLogger.log('JOURNAL_SUBMISSION_SUCCESS');
         } else {
           throw new Error('Unexpected server response');

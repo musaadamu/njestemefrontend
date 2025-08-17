@@ -199,39 +199,7 @@ export const fileUploadSecurity = {
     }
 };
 
-// Rate limiting helpers for frontend
-export const rateLimiting = {
-    // Simple client-side rate limiting
-    attempts: new Map(),
-    
-    canAttempt: (action, maxAttempts = 5, windowMs = 15 * 60 * 1000) => {
-        const now = Date.now();
-        const key = action;
-        
-        if (!rateLimiting.attempts.has(key)) {
-            rateLimiting.attempts.set(key, []);
-        }
-        
-        const attempts = rateLimiting.attempts.get(key);
-        
-        // Remove old attempts outside the window
-        const validAttempts = attempts.filter(timestamp => now - timestamp < windowMs);
-        rateLimiting.attempts.set(key, validAttempts);
-        
-        return validAttempts.length < maxAttempts;
-    },
-    
-    recordAttempt: (action) => {
-        const now = Date.now();
-        const key = action;
-        
-        if (!rateLimiting.attempts.has(key)) {
-            rateLimiting.attempts.set(key, []);
-        }
-        
-        rateLimiting.attempts.get(key).push(now);
-    }
-};
+// Rate limiting removed - no longer using client-side rate limiting
 
 // Security event logging
 export const securityLogger = {
@@ -263,6 +231,5 @@ export default {
     csrfProtection,
     cspHelpers,
     fileUploadSecurity,
-    rateLimiting,
     securityLogger
 };
