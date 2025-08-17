@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { tokenStorage } from './security';
 
 /**
  * Utility function to download files from the server
@@ -14,7 +15,7 @@ export const downloadFile = async (url, filename, fileType) => {
 
     try {
         // Get auth token
-        const token = localStorage.getItem('authToken');
+        const token = tokenStorage.get();
 
         // Log the download attempt
         console.log('Downloading file:', {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { tokenStorage, securityLogger, csrfProtection } from '../utils/security';
+import { tokenStorage, userStorage, securityLogger, csrfProtection } from '../utils/security';
 
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
@@ -114,7 +114,7 @@ console.log('API Configuration:', {
 // Request interceptor to inject token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    const token = tokenStorage.get();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -132,7 +132,7 @@ api.interceptors.response.use(
     // Check if the error is a 401 Unauthorized
     if (error.response?.status === 401) {
       // Clear the token if it's invalid
-      localStorage.removeItem('authToken');
+      tokenStorage.remove();
 
       // Get the current path
       const currentPath = window.location.pathname;

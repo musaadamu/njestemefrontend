@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { isProduction } from '../services/api';
+import { tokenStorage } from './security';
 
 // Direct Cloudinary URL for fallback
 const CLOUDINARY_DIRECT_URL = 'https://res.cloudinary.com/dxnp54kf2/raw/upload/v1750334083/adati_draft_copy_cxwh09.docx';
@@ -30,7 +31,7 @@ export const downloadFile = async (url, filename, fileType) => {
         }
 
         // Get auth token
-        const token = localStorage.getItem('authToken');
+        const token = tokenStorage.get();
 
         // Log the download attempt
         console.log('Downloading file:', {

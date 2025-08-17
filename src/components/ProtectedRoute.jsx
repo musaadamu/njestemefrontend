@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
+import { userStorage } from '../utils/security';
 
 const LoadingSpinner = () => (
     <div className="loading-spinner">
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       allowedRoles: allowedRoles,
       hasUser: !!user,
       userRole: user?.role,
-      userFromStorage: JSON.parse(localStorage.getItem('authUser'))
+      userFromStorage: userStorage.get()
     });
     
     // If no roles are specified, allow access to authenticated users

@@ -1,13 +1,14 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
+import { tokenStorage, userStorage } from '../../utils/security';
 
-// Retrieve token and user from localStorage if available
-const storedToken = localStorage.getItem('authToken');
-const storedUser = localStorage.getItem('authUser');
+// Retrieve token and user from secure storage if available
+const storedToken = tokenStorage.get();
+const storedUser = userStorage.get();
 
 const initialState = {
-    user: storedUser ? JSON.parse(storedUser) : null,
+    user: storedUser || null, // storedUser is already parsed by userStorage.get()
     token: storedToken || null,
     loading: false,
     error: null,
@@ -32,8 +33,8 @@ export const registerUser = createAsyncThunk(
                 role: data.user.role || userData.role || 'author' // Fallback to form data or default to author
             };
 
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('authUser', JSON.stringify(userWithRole));
+            tokenStorage.set(data.token);
+            userStorage.set(userWithRole);
 
             return {
                 ...data,
@@ -64,8 +65,8 @@ export const loginUser = createAsyncThunk(
 
             console.log('User with role:', userWithRole);
 
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('authUser', JSON.stringify(userWithRole));
+            tokenStorage.set(data.token);
+            userStorage.set(userWithRole);
 
             return {
                 ...data,
@@ -85,7 +86,7 @@ export const updateUserProfile = createAsyncThunk(
         try {
             const response = await api.auth.updateProfile(userData);
             const { data } = response;
-            localStorage.setItem('authUser', JSON.stringify(data));
+            userStorage.set(data);
             return data;
         } catch (error) {
             console.error('Profile update error:', error);
@@ -104,8 +105,8 @@ const authSlice = createSlice({
             state.token = null;
             state.loading = false;
             state.error = null;
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('authUser');
+            tokenStorage.remove();
+            userStorage.remove();
         }
     },
     extraReducers: (builder) => {

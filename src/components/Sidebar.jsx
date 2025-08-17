@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { userStorage } from '../utils/security';
 import './Sidebar.css';
 
 // Check if we're on a mobile device
@@ -15,10 +16,10 @@ const Sidebar = ({ className, onClose }) => {
     // Set active link based on current path
     setActiveLink(location.pathname);
 
-    // Get user from localStorage if available
-    const storedUser = localStorage.getItem('authUser');
+    // Get user from secure storage if available
+    const storedUser = userStorage.get();
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setUser(storedUser);
     }
 
     // Handle window resize for responsive behavior
