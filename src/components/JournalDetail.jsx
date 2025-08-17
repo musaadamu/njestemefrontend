@@ -1,74 +1,8 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
 import './JournalDetails.css';
-
-// Custom hook to manage document head
-const useDocumentHead = (title, description, keywords, ogData, structuredData) => {
-    useEffect(() => {
-        // Only update if we have valid data
-        if (!title || !description) return;
-
-        // Update document title
-        document.title = title;
-
-        // Update meta tags
-        const updateMetaTag = (name, content, property = false) => {
-            if (!content) return;
-
-            try {
-                const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
-                let meta = document.querySelector(selector);
-
-                if (!meta) {
-                    meta = document.createElement('meta');
-                    if (property) {
-                        meta.setAttribute('property', name);
-                    } else {
-                        meta.setAttribute('name', name);
-                    }
-                    document.head.appendChild(meta);
-                }
-                meta.setAttribute('content', content);
-            } catch (error) {
-                console.warn('Error updating meta tag:', name, error);
-            }
-        };
-
-        // Update basic meta tags
-        updateMetaTag('description', description);
-        updateMetaTag('keywords', keywords);
-
-        // Update Open Graph tags
-        if (ogData && typeof ogData === 'object') {
-            updateMetaTag('og:title', ogData.title, true);
-            updateMetaTag('og:description', ogData.description, true);
-            updateMetaTag('og:type', ogData.type, true);
-            updateMetaTag('og:url', ogData.url, true);
-        }
-
-        // Update structured data
-        if (structuredData && typeof structuredData === 'object' && Object.keys(structuredData).length > 0) {
-            try {
-                let script = document.querySelector('script[type="application/ld+json"]');
-                if (!script) {
-                    script = document.createElement('script');
-                    script.type = 'application/ld+json';
-                    document.head.appendChild(script);
-                }
-                script.textContent = JSON.stringify(structuredData);
-            } catch (error) {
-                console.warn('Error updating structured data:', error);
-            }
-        }
-
-        // Cleanup function to reset title when component unmounts
-        return () => {
-            document.title = 'IJIRSTME - International Journal';
-        };
-    }, [title, description, keywords, ogData, structuredData]);
-};
 
 // Add Cloudinary URLs for direct access as a last resort
 const CLOUDINARY_PDF_URLS = [
@@ -124,15 +58,138 @@ const JournalDetail = () => {
         fetchJournal();
     }, [id]);
 
-    // Simple fallback title update
-    useEffect(() => {
-        if (journal?.title) {
-            document.title = `${journal.title} - IJIRSTME`;
+    // Professional SEO implementation with proper cleanup
+    const updateSEO = useCallback(() => {
+        if (!journal) return;
+
+        // Update document title
+        const title = `${journal.title} - IJIRSTME`;
+        document.title = title;
+
+        // Helper function to safely update meta tags
+        const updateMetaTag = (selector, content) => {
+            if (!content) return;
+
+            try {
+                let meta = document.querySelector(selector);
+                if (!meta) {
+                    const isProperty = selector.includes('property=');
+                    meta = document.createElement('meta');
+
+                    if (isProperty) {
+                        const property = selector.match(/property="([^"]+)"/)?.[1];
+                        if (property) meta.setAttribute('property', property);
+                    } else {
+                        const name = selector.match(/name="([^"]+)"/)?.[1];
+                        if (name) meta.setAttribute('name', name);
+                    }
+
+                    document.head.appendChild(meta);
+                }
+                meta.setAttribute('content', content);
+            } catch (error) {
+                console.warn('SEO meta tag update failed:', selector, error);
+            }
+        };
+
+        // Update basic meta tags
+        const description = journal.abstract?.substring(0, 160) || `Research paper: ${journal.title}`;
+        const keywords = Array.isArray(journal.keywords) ? journal.keywords.join(', ') : 'research, journal, science';
+
+        updateMetaTag('meta[name="description"]', description);
+        updateMetaTag('meta[name="keywords"]', keywords);
+        updateMetaTag('meta[name="author"]', Array.isArray(journal.authors) ? journal.authors.join(', ') : '');
+
+        // Update Open Graph tags for social media
+        updateMetaTag('meta[property="og:title"]', journal.title);
+        updateMetaTag('meta[property="og:description"]', description);
+        updateMetaTag('meta[property="og:type"]', 'article');
+        updateMetaTag('meta[property="og:url"]', `https://njostemejournal.com.ng/journals/${journal._id}`);
+        updateMetaTag('meta[property="article:published_time"]', journal.publishedDate || journal.createdAt);
+        updateMetaTag('meta[property="article:author"]', Array.isArray(journal.authors) ? journal.authors.join(', ') : '');
+
+        // Update Twitter Card tags
+        updateMetaTag('meta[name="twitter:card"]', 'summary');
+        updateMetaTag('meta[name="twitter:title"]', journal.title);
+        updateMetaTag('meta[name="twitter:description"]', description);
+
+        // Update robots and canonical URL
+        updateMetaTag('meta[name="robots"]', 'index, follow');
+
+        // Add canonical URL
+        let canonical = document.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+            canonical = document.createElement('link');
+            canonical.rel = 'canonical';
+            document.head.appendChild(canonical);
         }
+        canonical.href = `https://njostemejournal.com.ng/journals/${journal._id}`;
+
+        // Update structured data for Google Scholar and search engines
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "ScholarlyArticle",
+            "headline": journal.title,
+            "abstract": journal.abstract,
+            "author": Array.isArray(journal.authors) ? journal.authors.map(author => ({
+                "@type": "Person",
+                "name": typeof author === 'string' ? author : (author.name || author)
+            })) : [],
+            "datePublished": journal.publishedDate || journal.createdAt,
+            "keywords": keywords,
+            "publisher": {
+                "@type": "Organization",
+                "name": "International Journal of Innovative Research in Science Technology and Mathematics Education",
+                "url": "https://njostemejournal.com.ng"
+            },
+            "url": `https://njostemejournal.com.ng/journals/${journal._id}`,
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://njostemejournal.com.ng/journals/${journal._id}`
+            }
+        };
+
+        // Safely update structured data
+        try {
+            let script = document.querySelector('script[type="application/ld+json"][data-journal-seo]');
+            if (!script) {
+                script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.setAttribute('data-journal-seo', 'true');
+                document.head.appendChild(script);
+            }
+            script.textContent = JSON.stringify(structuredData);
+        } catch (error) {
+            console.warn('Structured data update failed:', error);
+        }
+    }, [journal]);
+
+    // Apply SEO updates when journal data is available
+    useEffect(() => {
+        if (journal) {
+            updateSEO();
+        }
+
+        // Cleanup function
         return () => {
             document.title = 'IJIRSTME - International Journal';
+
+            // Clean up structured data and canonical URL on unmount
+            try {
+                const script = document.querySelector('script[type="application/ld+json"][data-journal-seo]');
+                if (script) {
+                    script.remove();
+                }
+
+                const canonical = document.querySelector('link[rel="canonical"]');
+                if (canonical && canonical.href.includes('/journals/')) {
+                    canonical.remove();
+                }
+            } catch (error) {
+                console.warn('SEO cleanup failed:', error);
+            }
         };
-    }, [journal?.title]);
+    }, [updateSEO]);
 
     const handleDownload = async (fileType) => {
         try {
@@ -202,58 +259,16 @@ const JournalDetail = () => {
     if (error) return <div className="bg-red-100 text-red-700 p-3 rounded">{error}</div>;
     if (!journal) return <div className="bg-yellow-100 text-yellow-700 p-3 rounded">Journal not found</div>;
 
-    // Memoize structured data for SEO to prevent infinite re-renders
-    const structuredData = useMemo(() => {
-        if (!journal) return {};
-
-        return {
-            "@context": "https://schema.org",
-            "@type": "ScholarlyArticle",
-            "headline": journal.title,
-            "abstract": journal.abstract,
-            "author": Array.isArray(journal.authors) ? journal.authors.map(author => ({
-                "@type": "Person",
-                "name": typeof author === 'string' ? author : author.name
-            })) : [],
-            "datePublished": journal.publishedDate ? new Date(journal.publishedDate).toISOString() : new Date().toISOString(),
-            "keywords": Array.isArray(journal.keywords) ? journal.keywords.join(', ') : '',
-            "publisher": {
-                "@type": "Organization",
-                "name": "International Journal of Innovative Research in Science Technology and Mathematics Education (IJIRSTME)"
-            },
-            "url": `https://njostemejournal.com.ng/journals/${journal._id}`
-        };
-    }, [journal]);
-
-    // Memoize Open Graph data
-    const ogData = useMemo(() => ({
-        title: journal?.title || 'Untitled Journal',
-        description: journal?.abstract?.substring(0, 200) || 'Research paper details',
-        type: 'article',
-        url: `https://njostemejournal.com.ng/journals/${id}`
-    }), [journal?.title, journal?.abstract, id]);
-
-    // Memoize meta values
-    const metaTitle = useMemo(() =>
-        journal?.title ? `${journal.title} - IJIRSTME` : 'Journal Details - IJIRSTME'
-    , [journal?.title]);
-
-    const metaDescription = useMemo(() =>
-        journal?.abstract?.substring(0, 160) || `View details of the research paper: ${journal?.title || 'Untitled Journal'}`
-    , [journal?.abstract, journal?.title]);
-
-    const metaKeywords = useMemo(() =>
-        journal?.keywords?.join(', ') || 'research, journal, science, technology, engineering, mathematics, education'
-    , [journal?.keywords]);
-
-    // Use custom hook to manage document head (only when journal data is available)
-    useDocumentHead(
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-        ogData,
-        structuredData
-    );
+    /*
+     * Professional SEO Implementation
+     * - Uses useCallback to prevent unnecessary re-renders
+     * - Proper error handling for DOM manipulation
+     * - Comprehensive meta tags for search engines
+     * - Open Graph tags for social media sharing
+     * - Twitter Card support
+     * - Structured data for Google Scholar
+     * - Proper cleanup on component unmount
+     */
 
     return (
         <div className="max-w-3xl mx-auto bg-white p-6 shadow-md rounded-lg">
