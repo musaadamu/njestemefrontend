@@ -221,19 +221,19 @@ const JournalUpload = () => {
             console.log('Direct Cloudinary uploads completed:', uploads);
 
             // 2) Inform backend to create Journal record from Cloudinary metadata
-            const body = new FormData();
-            body.append('title', formData.title);
-            body.append('abstract', formData.abstract);
-            body.append('authors', JSON.stringify(authorNames));
-            body.append('keywords', JSON.stringify(keywords));
-            body.append('docxCloudinaryUrl', uploads.docx?.secure_url || '');
-            body.append('pdfCloudinaryUrl', uploads.pdf?.secure_url || '');
-            body.append('docxFileId', uploads.docx?.public_id || '');
-            body.append('pdfFileId', uploads.pdf?.public_id || '');
+            // Send JSON body to backend (Express parses JSON, multipart would leave req.body empty)
+            const body = {
+                title: formData.title,
+                abstract: formData.abstract,
+                authors: authorNames,
+                keywords: keywords,
+                docxCloudinaryUrl: uploads.docx?.secure_url || '',
+                pdfCloudinaryUrl: uploads.pdf?.secure_url || '',
+                docxFileId: uploads.docx?.public_id || '',
+                pdfFileId: uploads.pdf?.public_id || ''
+            };
 
-            const createResp = await api.post('/journals/from-cloudinary', body, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const createResp = await api.post('/journals/from-cloudinary', body);
 
             if (!createResp.data) throw new Error('Failed to create journal record');
 
