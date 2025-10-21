@@ -447,8 +447,8 @@ import './JournalList.css';
 import api from '../services/api';
 import { downloadFile } from '../utils/fileDownload';
 
-// Add Cloudinary URL for direct access as a last resort
-const CLOUDINARY_DIRECT_URL = 'https://res.cloudinary.com/dxnp54kf2/raw/upload/v1750334083/adati_draft_copy_cxwh09.docx';
+// Do not rely on a single hard-coded Cloudinary URL. Prefer journal-provided URLs
+// or backend download endpoints. The obsolete static URL was removed.
 
 const JournalList = () => {
     const navigate = useNavigate();
@@ -619,9 +619,16 @@ const JournalList = () => {
                 if (result) return;
             }
 
-            // If primary download fails or no URL available, try direct URL
-            console.log('Using direct Cloudinary URL as fallback');
-            await downloadFile(CLOUDINARY_DIRECT_URL, 'journal_document', 'docx');
+            // If primary download fails or no URL available, try journal's cloud URL
+            // or open the backend direct-download URL in a new tab as a last resort.
+            if (journal.pdfCloudinaryUrl) {
+                await downloadFile(journal.pdfCloudinaryUrl, 'journal_document', 'pdf');
+            } else {
+                // Open backend direct-download endpoint in a new tab
+                const base = api.defaults.baseURL.replace('/api', '') || 'https://coels-backend.onrender.com';
+                const direct = `${base}/journals/${journal._id}/direct-download/docx`;
+                window.open(direct, '_blank');
+            }
         } catch (error) {
             console.error('Download failed:', error);
             toast.error('Download failed. Please try again later.');

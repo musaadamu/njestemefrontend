@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./JournalUpload.css";
 import Navigation from "./Navigation"
 import api from "../services/api";
+// Using native Clipboard API for copy buttons (no extra dependency)
 
 const JournalUpload = () => {
     const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const JournalUpload = () => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+    const [cloudinaryUrls, setCloudinaryUrls] = useState({ pdf: null, docx: null, pdfId: null, docxId: null });
     const [pdfDragActive, setPdfDragActive] = useState(false);
     const [docxDragActive, setDocxDragActive] = useState(false);
     const [pdfFileName, setPdfFileName] = useState("");
@@ -165,14 +167,85 @@ const JournalUpload = () => {
         formDataObj.append("docxFile", docxFile);
 
         try {
-            // Use the api service's journal upload method
-            const response = await api.journals.upload(formDataObj);
+            // Preferred approach: direct-to-Cloudinary browser upload to avoid streaming files through Render
+            // 1) Request an upload signature/metadata from backend
+            const sigResp = await api.get('/journals/upload-signature');
+            const sig = sigResp.data;
 
-            if (!response.data) {
-                throw new Error("No data received from server");
+            if (!sig || !sig.signature) {
+                throw new Error('Failed to obtain Cloudinary signature');
             }
 
-            setSuccess("Journal uploaded successfully!");
+            // Helper to upload a single file to Cloudinary
+            const uploadToCloudinary = async (file, folder, signaturePayload) => {
+                const form = new FormData();
+                form.append('file', file);
+                form.append('api_key', signaturePayload.apiKey || '');
+                form.append('timestamp', signaturePayload.timestamp);
+                form.append('signature', signaturePayload.signature);
+                if (signaturePayload.folder) form.append('folder', signaturePayload.folder);
+                // Use raw upload endpoint
+                const uploadUrl = signaturePayload.uploadUrl;
+
+                const resp = await fetch(uploadUrl, {
+                    method: 'POST',
+                    body: form
+                });
+
+                if (!resp.ok) {
+                    const text = await resp.text().catch(() => '');
+                    throw new Error(`Cloudinary upload failed: ${resp.status} ${text}`);
+                }
+
+                const data = await resp.json();
+                return data;
+            };
+
+            // Perform uploads in parallel
+            const signaturePayload = sig;
+            const uploads = {};
+            const uploadPromises = [];
+
+            uploadPromises.push(
+                uploadToCloudinary(pdfFile, signaturePayload.folder, signaturePayload)
+                    .then(data => { uploads.pdf = data; })
+            );
+
+            uploadPromises.push(
+                uploadToCloudinary(docxFile, signaturePayload.folder, signaturePayload)
+                    .then(data => { uploads.docx = data; })
+            );
+
+            await Promise.all(uploadPromises);
+
+            console.log('Direct Cloudinary uploads completed:', uploads);
+
+            // 2) Inform backend to create Journal record from Cloudinary metadata
+            const body = new FormData();
+            body.append('title', formData.title);
+            body.append('abstract', formData.abstract);
+            body.append('authors', JSON.stringify(authorNames));
+            body.append('keywords', JSON.stringify(keywords));
+            body.append('docxCloudinaryUrl', uploads.docx?.secure_url || '');
+            body.append('pdfCloudinaryUrl', uploads.pdf?.secure_url || '');
+            body.append('docxFileId', uploads.docx?.public_id || '');
+            body.append('pdfFileId', uploads.pdf?.public_id || '');
+
+            const createResp = await api.post('/journals/from-cloudinary', body, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            if (!createResp.data) throw new Error('Failed to create journal record');
+
+            // Show Cloudinary URLs and copy buttons
+            setSuccess('Journal uploaded successfully! Cloudinary URLs are shown below.');
+            setCloudinaryUrls({
+                pdf: uploads.pdf?.secure_url || null,
+                docx: uploads.docx?.secure_url || null,
+                pdfId: uploads.pdf?.public_id || null,
+                docxId: uploads.docx?.public_id || null
+            });
+
             resetForm();
 
             // Scroll to top to show success message
@@ -519,6 +592,54 @@ const JournalUpload = () => {
                                     </div>
                                 </div>
                             </form>
+
+                            {cloudinaryUrls.pdf || cloudinaryUrls.docx ? (
+                                <div className="mt-6 p-4 bg-gray-50 border rounded">
+                                    <h3 className="font-semibold mb-2">Cloudinary upload results</h3>
+                                    {cloudinaryUrls.pdf && (
+                                        <div className="mb-2">
+                                            <div className="text-sm text-gray-700">PDF URL</div>
+                                            <div className="flex items-center">
+                                                <input className="flex-1 p-2 border rounded" value={cloudinaryUrls.pdf} readOnly />
+                                                <button
+                                                    className="ml-2 p-2 bg-blue-600 text-white rounded"
+                                                    onClick={async () => {
+                                                        try {
+                                                            await navigator.clipboard.writeText(cloudinaryUrls.pdf);
+                                                            toast.success('PDF URL copied to clipboard');
+                                                        } catch (e) {
+                                                            console.error('Copy failed', e);
+                                                            toast.error('Failed to copy URL');
+                                                        }
+                                                    }}
+                                                >Copy</button>
+                                            </div>
+                                            <div className="text-xs text-gray-500">Public ID: {cloudinaryUrls.pdfId}</div>
+                                        </div>
+                                    )}
+                                    {cloudinaryUrls.docx && (
+                                        <div>
+                                            <div className="text-sm text-gray-700">DOCX URL</div>
+                                            <div className="flex items-center">
+                                                <input className="flex-1 p-2 border rounded" value={cloudinaryUrls.docx} readOnly />
+                                                <button
+                                                    className="ml-2 p-2 bg-blue-600 text-white rounded"
+                                                    onClick={async () => {
+                                                        try {
+                                                            await navigator.clipboard.writeText(cloudinaryUrls.docx);
+                                                            toast.success('DOCX URL copied to clipboard');
+                                                        } catch (e) {
+                                                            console.error('Copy failed', e);
+                                                            toast.error('Failed to copy URL');
+                                                        }
+                                                    }}
+                                                >Copy</button>
+                                            </div>
+                                            <div className="text-xs text-gray-500">Public ID: {cloudinaryUrls.docxId}</div>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                 </div>

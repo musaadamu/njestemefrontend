@@ -3,8 +3,9 @@ import { toast } from 'react-toastify';
 import { isProduction } from '../services/api';
 import { tokenStorage } from './security';
 
-// Direct Cloudinary URL for fallback
-const CLOUDINARY_DIRECT_URL = 'https://res.cloudinary.com/dxnp54kf2/raw/upload/v1750334083/adati_draft_copy_cxwh09.docx';
+// Note: Do not rely on a single hard-coded Cloudinary URL as a fallback.
+// Frontend should prefer DB-provided Cloudinary URLs (passed into download helpers)
+// and only use backend endpoints as a fallback. Removed the obsolete static URL.
 
 /**
  * Utility function to download files from the server
@@ -18,17 +19,8 @@ export const downloadFile = async (url, filename, fileType) => {
     const toastId = toast.loading(`Downloading ${fileType.toUpperCase()} file...`);
 
     try {
-        // If URL is the direct Cloudinary URL, use it directly
-        if (url === CLOUDINARY_DIRECT_URL) {
-            window.open(url, '_blank');
-            toast.update(toastId, {
-                render: 'Download started',
-                type: 'success',
-                isLoading: false,
-                autoClose: 3000
-            });
-            return true;
-        }
+        // No special-case static Cloudinary fallback here. If caller passed a
+        // Cloudinary URL, we'll detect it below and open it directly.
 
         // Get auth token
         const token = tokenStorage.get();
@@ -58,7 +50,7 @@ export const downloadFile = async (url, filename, fileType) => {
             'Accept': '*/*'
         };
 
-        // For Cloudinary URLs, use direct download
+        // For Cloudinary URLs, open in a new tab (direct download from Cloudinary)
         if (isCloudinary) {
             console.log('Direct download from Cloudinary URL:', url);
             window.open(url, '_blank');
