@@ -31,7 +31,7 @@ const About = () => {
           </div>
           <div className="contact-details">
             <h3>Contact Information</h3>
-            <p>Location: Modibbo Adamawa University, Yola, Nigeria</p>
+            <p>Location: Modibbo Adama University, Yola, Nigeria</p>
             <p>Email: contact@ijirstme.org</p>
             <p>Phone: +234 8138614901</p>
           </div>

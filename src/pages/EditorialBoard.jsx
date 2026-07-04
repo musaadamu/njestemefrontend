@@ -39,7 +39,7 @@ export default function EditorialBoard() {
 
   const editorialSecretary = {
     name: "Musah Aminu, PhD",
-    affiliation: "Department of Integrated Science, F. C. E (T) Potiskum"
+    Phone: "+234 813 861 4901"
   };
 
   return (
