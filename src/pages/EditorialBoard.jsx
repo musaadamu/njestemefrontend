@@ -100,7 +100,7 @@ export default function EditorialBoard() {
           <div className="bg-white rounded-lg shadow-lg border border-indigo-200 p-8 max-w-3xl mx-auto">
             <div className="text-center">
               <h4 className="text-xl font-bold text-gray-900 mb-2">{editorialSecretary.name}</h4>
-              <p className="text-gray-600 text-lg">{editorialSecretary.affiliation}</p>
+              <p className="text-gray-600 text-lg">{editorialSecretary.Phone}</p>
             </div>
           </div>
         </div>
