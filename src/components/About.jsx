@@ -31,7 +31,7 @@ const About = () => {
           </div>
           <div className="contact-details">
             <h3>Contact Information</h3>
-            <p>Location: Federal College of Education Technical Potiskum Yobe State</p>
+            <p>Location: Modibbo Adamawa University, Yola, Nigeria</p>
             <p>Email: contact@ijirstme.org</p>
             <p>Phone: +234 8138614901</p>
           </div>
@@ -86,14 +86,14 @@ const About = () => {
         <h2>Our Location</h2>
         <div className="location-map">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.964964357751!2d11.031963!3d11.713964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10f4c7e2e2e2e2e3%3A0x7e2e2e2e2e2e2e2e!2sFederal%20College%20of%20Education%20(Technical)%20Potiskum!5e0!3m2!1sen!2sng!4v1701876008045!5m2!1sen!2sng"
+            src="https://www.google.com/maps?q=Modibbo+Adamawa+University,+Yola,+Nigeria&output=embed"
             width="100%"
             height="450"
             style={{ border: 0 }}
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Federal College of Education Technical Potiskum Location"
+            title="Modibbo Adamawa University, Yola, Nigeria Location"
           ></iframe>
         </div>
       </section>
