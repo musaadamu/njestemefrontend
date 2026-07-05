@@ -39,7 +39,7 @@ export default function EditorialBoard() {
 
   const editorialSecretary = {
     name: "Musah Aminu, PhD",
-    Phone: "+234 803 614 1266"
+    Phone: {"+234 803 614 1266", "07011394049"}
   };
 
   return (
