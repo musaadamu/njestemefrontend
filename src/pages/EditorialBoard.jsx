@@ -12,7 +12,7 @@ export default function EditorialBoard() {
       affiliation: "Energy Research Institute, Luton, UK"
     },
     {
-      name: "Dr. I. Dauda",
+      name: "Prof. I. Dauda",
       affiliation: "Department of Building Construction Technology, Federal University of Technology, Minna"
     },
     {
