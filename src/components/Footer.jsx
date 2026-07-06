@@ -43,7 +43,7 @@ const Footer = () => {
                 </div>
                 <div className="contact-item">
                   <FiMail />
-                  <span>contact@coelsn-journal.org</span>
+                  <span>contact@ijirstme.org</span>
                 </div>
               </div>
             </div>
