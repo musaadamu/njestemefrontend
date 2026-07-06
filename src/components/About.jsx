@@ -33,7 +33,7 @@ const About = () => {
             <h3>Contact Information</h3>
             <p>Location: Modibbo Adama University, Yola, Nigeria</p>
             <p>Email: contact@ijirstme.org</p>
-            <p>Phone: +234 8138614901</p>
+            <p>Phone: 08036141266 and 07011394049</p>
           </div>
         </div>
       </section>

@@ -35,7 +35,7 @@ const Contact = () => {
             <h3>Contact Information</h3>
             <p>
               <i className="fas fa-phone-alt"></i>
-              <a href="tel:+2348138614901">+234 813 861 4901</a>
+              <a href="tel:+2348138614901">08036141266</a>
             </p>
             <p>
               <i className="fas fa-envelope"></i>
@@ -43,7 +43,7 @@ const Contact = () => {
             </p>
             <p>
               <i className="fas fa-map-marker-alt"></i>
-              <span>Jos, Plateau State, Nigeria</span>
+              <span>Modibbo Adama University, Yola, Nigeria</span>
             </p>
           </div>
 
