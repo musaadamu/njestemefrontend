@@ -35,11 +35,11 @@ const Footer = () => {
               <div className="footer-contact">
                 <div className="contact-item">
                   <FaMapMarkerAlt />
-                  <span>123 Academic Ave, Nigeria</span>
+                  <span>Modibbo Adama University, Yola, Nigeria</span>
                 </div>
                 <div className="contact-item">
                   <FaPhone />
-                  <span>+234 123 456 7890</span>
+                  <span>08036141266</span>
                 </div>
                 <div className="contact-item">
                   <FiMail />
